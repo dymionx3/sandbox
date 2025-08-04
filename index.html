@@ -4,66 +4,210 @@
   <meta charset="UTF-8" />
   <title>🧪 Sandbox Projects</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     html, body {
       height: 100%;
-      margin: 0;
-      background-color: #000;
-      color: #00ff5e;
-      font-family: monospace;
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+      color: #e8e8e8;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
     }
+
     .main-only {
-      padding: 2em;
-      max-width: 1000px;
-      margin: auto;
+      padding: 3rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
-    h1 {
-      color: #0f0;
+
+    .header {
       text-align: center;
+      margin-bottom: 4rem;
     }
+
+    h1 {
+      color: #ffffff;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: #a0a0a0;
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+    }
+
+    .description {
+      font-size: 1rem;
+      color: #808080;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
     .tools-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1em;
-      margin-top: 2em;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
     }
+
     .tool-button {
-      border: 1px solid #00ff5e;
-      padding: 1em;
-      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 2rem 1.5rem;
+      border-radius: 16px;
       text-align: center;
-      font-weight: bold;
-      background: transparent;
-      transition: background 0.2s, color 0.2s;
-      color: #00ff5e;
+      font-weight: 500;
+      font-size: 1.1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      color: #ffffff;
       text-decoration: none;
       display: block;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
     }
+
+    .tool-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s;
+    }
+
     .tool-button:hover {
-      background: #00ff5e22;
-      color: #0f0;
+      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     }
+
+    .tool-button:hover::before {
+      left: 100%;
+    }
+
+    .tool-button:active {
+      transform: translateY(-2px);
+    }
+
+    .tool-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .tool-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .tool-description {
+      font-size: 0.9rem;
+      color: #a0a0a0;
+      font-weight: 400;
+    }
+
     footer {
       text-align: center;
-      font-size: 0.8em;
-      padding: 1em;
-      border-top: 1px solid #0f0;
-      color: #0f0;
-      margin-top: 3em;
+      font-size: 0.9rem;
+      padding: 2rem 0;
+      margin-top: 4rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: #808080;
+    }
+
+    @media (max-width: 768px) {
+      .main-only {
+        padding: 2rem 1rem;
+      }
+      
+      .tools-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .tool-button {
+        padding: 1.5rem 1rem;
+      }
+    }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
     }
   </style>
 </head>
 <body>
   <div class="main-only">
-    <h1>🧪 Sandbox Projects</h1>
-    <p class="text-center">Test tools, experiments, and UI projects:</p>
+    <div class="header">
+      <h1>🧪 Sandbox Projects</h1>
+      <p class="subtitle">Interactive Tools & Experiments</p>
+      <p class="description">A collection of web-based tools, experiments, and UI projects for testing and development.</p>
+    </div>
 
     <div class="tools-grid">
-      <a class="tool-button" href="stayinalive/">Stayin’ Alive Tracker</a>
-      <a class="tool-button" href="gamepadtester/">Gamepad Tester</a>
-      <a class="tool-button" href="beginnersguidetohtml/">Beginner's HTML Guide</a>
-      <a class="tool-button" href="dualshock/">DualShock Calibrator</a>
-      <!-- Add more buttons as needed -->
+      <a class="tool-button" href="stayinalive/">
+        <span class="tool-icon">💓</span>
+        <div class="tool-title">Stayin' Alive Tracker</div>
+        <div class="tool-description">Track your daily activities and habits</div>
+      </a>
+      <a class="tool-button" href="gamepadtester/">
+        <span class="tool-icon">🎮</span>
+        <div class="tool-title">Gamepad Tester</div>
+        <div class="tool-description">Test and calibrate game controllers</div>
+      </a>
+      <a class="tool-button" href="beginnersguidetohtml/">
+        <span class="tool-icon">📚</span>
+        <div class="tool-title">Beginner's HTML Guide</div>
+        <div class="tool-description">Learn HTML fundamentals interactively</div>
+      </a>
+      <a class="tool-button" href="dualshock/">
+        <span class="tool-icon">🎯</span>
+        <div class="tool-title">DualShock Calibrator</div>
+        <div class="tool-description">Calibrate PlayStation controllers</div>
+      </a>
     </div>
 
     <footer>
