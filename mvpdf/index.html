@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>M.V. Electronix LLC - PDF Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    * { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .gradient-text {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .glass-effect { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); }
+    .hover-scale { transition: transform .25s cubic-bezier(.4,0,.2,1); }
+    .hover-scale:hover { transform: scale(1.03); }
+    .floating { animation: floating 3s ease-in-out infinite; }
+    @keyframes floating { 0%{transform:translateY(0)}50%{transform:translateY(-20px)}100%{transform:translateY(0)} }
+    .notification { animation: slideInRight .3s ease-out; }
+    @keyframes slideInRight { from{ transform:translateX(100%); opacity:0 } to{ transform:translateX(0); opacity:1 } }
+    .text-editor { min-height: 300px; border: 1px solid #e5e7eb; border-radius: .5rem; padding: 1rem; outline: none; }
+    .text-editor:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,.15) }
+    .file-drop-zone { transition: all .3s ease; border: 2px dashed #cbd5e1; }
+    .file-drop-zone.dragover { border-color:#667eea; background-color: rgba(102,126,234,.08); transform: scale(1.01); }
+    .slide-in { animation: slideIn .4s ease-out; }
+    @keyframes slideIn { from{ transform:translateY(10px); opacity:0 } to{ transform:translateY(0); opacity:1 } }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  <!-- Animated Background -->
+  <div aria-hidden="true" class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 floating"></div>
+    <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 floating" style="animation-delay: 2s"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 floating" style="animation-delay: 4s"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="relative z-10 glass-effect shadow-lg" role="banner">
+    <div class="max-w-6xl mx-auto px-4 py-4">
+      <div class="flex items-center justify-center">
+        <div class="flex items-center gap-3" aria-label="App brand">
+          <div class="w-10 h-10 gradient-bg rounded-lg grid place-items-center" aria-hidden="true">
+            <i class="fas fa-file-pdf text-white text-xl"></i>
+          </div>
+          <div class="text-center">
+            <h1 class="text-2xl font-bold gradient-text">PDF Studio</h1>
+            <p class="text-xs text-gray-600">by M.V. Electronix LLC</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative z-10 py-16 md:py-20 flex-grow">
+    <div class="max-w-5xl mx-auto px-4 text-center">
+      <h2 class="text-5xl md:text-6xl font-extrabold mb-6"><span class="gradient-text">Transform Your PDFs</span></h2>
+      <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">Powerful PDF tools by M.V. Electronix LLC. Create, edit, fill, merge, split, and more — all client‑side, private by default.</p>
+      <button onclick="scrollToTools()" class="gradient-bg text-white px-8 py-4 rounded-full font-semibold hover-scale shadow-lg focus:outline-none focus:ring-4 focus:ring-purple-300" aria-label="Get started">
+        Get Started <i class="fas fa-arrow-down ml-2" aria-hidden="true"></i>
+      </button>
+    </div>
+  </section>
+
+  <!-- Tools -->
+  <section id="tools" class="relative z-10 py-12 md:py-16">
+    <div class="max-w-6xl mx-auto px-4">
+      <h3 class="text-3xl font-bold text-center mb-10 gradient-text">PDF Tools by M.V. Electronix LLC</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Cards -->
+        <button class="tool-card bg-white rounded-xl shadow-lg p-6 hover-scale text-left" onclick="openTool('create')" aria-label="Create PDF">
+          <div class="w-16 h-16 gradient-bg rounded-lg grid place-items-center mb-4"><i class="fas fa-plus-circle text-white text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-semibold mb-2">Create PDF</h4>
+          <p class="text-gray-600">Create a PDF from text, images, or a blank document.</p>
+        </button>
+
+        <button class="tool-card bg-white rounded-xl shadow-lg p-6 hover-scale text-left" onclick="openTool('fill')" aria-label="Fill PDF">
+          <div class="w-16 h-16 gradient-bg rounded-lg grid place-items-center mb-4"><i class="fas fa-signature text-white text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-semibold mb-2">Fill & Sign</h4>
+          <p class="text-gray-600">Add text boxes and a drawn signature.</p>
+        </button>
+
+        <button class="tool-card bg-white rounded-xl shadow-lg p-6 hover-scale text-left" onclick="openTool('edit')" aria-label="Edit PDF">
+          <div class="w-16 h-16 gradient-bg rounded-lg grid place-items-center mb-4"><i class="fas fa-pencil-alt text-white text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-semibold mb-2">Edit (Canvas)</h4>
+          <p class="text-gray-600">Quick annotations via canvas (raster output).</p>
+        </button>
+
+        <button class="tool-card bg-white rounded-xl shadow-lg p-6 hover-scale text-left" onclick="openTool('merge')" aria-label="Merge PDFs">
+          <div class="w-16 h-16 gradient-bg rounded-lg grid place-items-center mb-4"><i class="fas fa-layer-group text-white text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-semibold mb-2">Merge PDFs</h4>
+          <p class="text-gray-600">Combine PDFs without losing text quality.</p>
+        </button>
+
+        <button class="tool-card bg-white rounded-xl shadow-lg p-6 hover-scale text-left" onclick="openTool('split')" aria-label="Split PDF">
+          <div class="w-16 h-16 gradient-bg rounded-lg grid place-items-center mb-4"><i class="fas fa-cut text-white text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-semibold mb-2">Split PDF</h4>
+          <p class="text-gray-600">Extract page ranges to new files.</p>
+        </button>
+
+        <button class="tool-card bg-white rounded-xl shadow-lg p-6 hover-scale text-left" onclick="openTool('compress')" aria-label="Compress PDF">
+          <div class="w-16 h-16 gradient-bg rounded-lg grid place-items-center mb-4"><i class="fas fa-compress text-white text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-semibold mb-2">Compress PDF</h4>
+          <p class="text-gray-600">Downscale pages to reduce size.</p>
+        </button>
+
+        <button class="tool-card bg-white rounded-xl shadow-lg p-6 hover-scale text-left" onclick="openTool('convert')" aria-label="Convert to PDF">
+          <div class="w-16 h-16 gradient-bg rounded-lg grid place-items-center mb-4"><i class="fas fa-file-arrow-down text-white text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-semibold mb-2">Convert to PDF</h4>
+          <p class="text-gray-600">Convert images (JPG/PNG) & text files.</p>
+        </button>
+
+        <button class="tool-card bg-white rounded-xl shadow-lg p-6 hover-scale text-left" onclick="openTool('watermark')" aria-label="Add Watermark">
+          <div class="w-16 h-16 gradient-bg rounded-lg grid place-items-center mb-4"><i class="fas fa-stamp text-white text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-semibold mb-2">Add Watermark</h4>
+          <p class="text-gray-600">Text watermark with color, opacity, angle.</p>
+        </button>
+
+        <button class="tool-card bg-white rounded-xl shadow-lg p-6 hover-scale text-left" onclick="openTool('rotate')" aria-label="Rotate Pages">
+          <div class="w-16 h-16 gradient-bg rounded-lg grid place-items-center mb-4"><i class="fas fa-rotate-right text-white text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-semibold mb-2">Rotate Pages</h4>
+          <p class="text-gray-600">Rotate all or selected pages.</p>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="relative z-10 bg-gray-900 text-white py-8 mt-auto" role="contentinfo">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <div class="mb-4">
+        <h3 class="text-2xl font-bold gradient-text">M.V. Electronix LLC</h3>
+        <p class="text-gray-400 mt-2">Innovative PDF Solutions</p>
+      </div>
+      <div class="flex justify-center gap-6 mb-4" aria-label="social links">
+        <a href="#" class="text-gray-400 hover:text-white transition" aria-label="Twitter"><i class="fab fa-twitter text-xl"></i></a>
+        <a href="#" class="text-gray-400 hover:text-white transition" aria-label="LinkedIn"><i class="fab fa-linkedin text-xl"></i></a>
+        <a href="#" class="text-gray-400 hover:text-white transition" aria-label="GitHub"><i class="fab fa-github text-xl"></i></a>
+      </div>
+      <p class="text-gray-500 text-sm">© <span id="year"></span> M.V. Electronix LLC. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Modal -->
+  <div id="toolModal" class="fixed inset-0 bg-black/50 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="toolTitle">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden slide-in">
+        <div class="gradient-bg p-6 text-white">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 id="toolTitle" class="text-2xl font-bold">Tool</h3>
+              <p class="text-sm/relaxed opacity-90">Powered by M.V. Electronix LLC</p>
+            </div>
+            <button onclick="closeTool()" class="text-white hover:text-gray-200 focus:outline-none focus:ring-4 focus:ring-white/30 rounded-lg p-1" aria-label="Close tool">
+              <i class="fas fa-times text-2xl"></i>
+            </button>
+          </div>
+        </div>
+        <div class="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+          <div id="toolContent" class="space-y-6"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notifications -->
+  <div id="notificationContainer" class="fixed top-4 right-4 z-50 space-y-2" aria-live="polite"></div>
+
+  <script>
+    // PDF.js worker (already included via CDN line above)
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    // State
+    let currentTool = '';
+    let uploadedFiles = [];
+    let uploadedImages = [];
+
+    // Utils
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+    function scrollToTools(){ document.getElementById('tools').scrollIntoView({ behavior: 'smooth' }); }
+    function show(el){ el?.classList.remove('hidden'); }
+    function hide(el){ el?.classList.add('hidden'); }
+
+    function notify(message, type='info'){
+      const container = document.getElementById('notificationContainer');
+      const n = document.createElement('div');
+      const colors = { success:'bg-green-600', error:'bg-red-600', info:'bg-blue-600' };
+      n.className = `notification ${colors[type]} text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3`;
+      n.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':type==='error'?'exclamation-circle':'info-circle'}"></i><span>${message}</span>`;
+      container.appendChild(n);
+      setTimeout(()=>{ n.style.opacity='0'; setTimeout(()=>n.remove(), 300); }, 3000);
+    }
+
+    function bytesToBlobUrl(bytes, mime='application/pdf'){ const blob = new Blob([bytes], { type: mime }); return URL.createObjectURL(blob); }
+    function downloadBytes(bytes, filename){ const a=document.createElement('a'); a.href=bytesToBlobUrl(bytes); a.download=filename; document.body.appendChild(a); a.click(); a.remove(); }
+    function formatFileSize(bytes){ if(bytes===0) return '0 B'; const k=1024; const sizes=['B','KB','MB','GB']; const i=Math.floor(Math.log(bytes)/Math.log(k)); return (bytes/Math.pow(k,i)).toFixed(2)+' '+sizes[i]; }
+    function hexToRgb(hex){ const v = hex.replace('#',''); const bigint = parseInt(v,16); if(v.length===3){ const r=((bigint>>8)&0xF)*17; const g=((bigint>>4)&0xF)*17; const b=(bigint&0xF)*17; return {r,g,b}; } return { r:(bigint>>16)&255, g:(bigint>>8)&255, b:bigint&255 } }
+
+    // Modal
+    function openTool(toolName){
+      currentTool = toolName;
+      const modal = document.getElementById('toolModal');
+      const title = document.getElementById('toolTitle');
+      const content = document.getElementById('toolContent');
+
+      const toolConfig = {
+        create: { title:'Create PDF', content: getCreateContent() },
+        fill: { title:'Fill & Sign', content: getFillContent() },
+        edit: { title:'Edit (Canvas)', content: getEditContent() },
+        merge: { title:'Merge PDFs', content: getMergeContent() },
+        split: { title:'Split PDF', content: getSplitContent() },
+        compress: { title:'Compress PDF', content: getCompressContent() },
+        convert: { title:'Convert to PDF', content: getConvertContent() },
+        watermark: { title:'Add Watermark', content: getWatermarkContent() },
+        rotate: { title:'Rotate Pages', content: getRotateContent() },
+      };
+
+      title.textContent = toolConfig[toolName].title;
+      content.innerHTML = toolConfig[toolName].content;
+      modal.classList.remove('hidden');
+      initializeDragAndDrop();
+    }
+    function closeTool(){ document.getElementById('toolModal').classList.add('hidden'); uploadedFiles=[]; uploadedImages=[]; }
+
+    // ---- Tool UIs ----
+    function getCreateContent(){ return `
+      <div class="space-y-6">
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <h4 class="font-semibold mb-3">Create PDF from:</h4>
+          <div class="space-y-3">
+            <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-100">
+              <input type="radio" name="createType" value="text" checked class="text-purple-600">
+              <div><p class="font-medium">Text Document</p><p class="text-sm text-gray-500">Write or paste formatted text</p></div>
+            </label>
+            <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-100">
+              <input type="radio" name="createType" value="images" class="text-purple-600">
+              <div><p class="font-medium">Images</p><p class="text-sm text-gray-500">Convert JPG/PNG to PDF pages</p></div>
+            </label>
+            <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-100">
+              <input type="radio" name="createType" value="blank" class="text-purple-600">
+              <div><p class="font-medium">Blank Document</p><p class="text-sm text-gray-500">Create empty pages</p></div>
+            </label>
+          </div>
+        </div>
+
+        <div id="textCreate" class="space-y-4">
+          <label class="block text-sm font-medium">Document Title<input type="text" id="docTitle" placeholder="Enter document title" class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-500" /></label>
+          <label class="block text-sm font-medium">Content<div contenteditable="true" id="textContent" class="text-editor" aria-label="Text content" placeholder="Start typing your content here..."></div></label>
+          <label class="block text-sm font-medium">Font Size<select id="fontSizeSelect" class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-500">
+            <option value="10">10px</option><option value="12" selected>12px</option><option value="14">14px</option><option value="16">16px</option><option value="18">18px</option><option value="20">20px</option></select></label>
+        </div>
+
+        <div id="imageCreate" class="hidden">
+          <div class="file-drop-zone p-8 rounded-lg text-center" id="imageDrop">
+            <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
+            <p class="text-lg text-gray-600 mb-2">Drag & drop images here</p>
+            <p class="text-sm text-gray-500 mb-4">or</p>
+            <input type="file" id="imageInput" multiple accept="image/*" class="hidden" />
+            <button onclick="document.getElementById('imageInput').click()" class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Images</button>
+          </div>
+          <div id="imageList" class="mt-4 space-y-2"></div>
+        </div>
+
+        <div id="blankCreate" class="hidden space-y-4">
+          <label class="block text-sm font-medium">Page Size<select id="pageSize" class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-500"><option value="a4">A4</option><option value="letter">Letter</option><option value="legal">Legal</option></select></label>
+          <label class="block text-sm font-medium">Number of Pages<input type="number" id="pageCount" min="1" value="1" class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-500" /></label>
+          <label class="block text-sm font-medium">Orientation<select id="orientation" class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-500"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></label>
+        </div>
+
+        <button onclick="createPDF()" class="gradient-bg text-white px-6 py-3 rounded-lg hover-scale w-full font-semibold">Create PDF</button>
+      </div>` }
+
+    function getFillContent(){ return `
+      <div class="space-y-6">
+        <div class="file-drop-zone p-8 rounded-lg text-center" id="dropZone">
+          <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
+          <p class="text-lg text-gray-600 mb-2">Drag & drop a PDF</p>
+          <p class="text-sm text-gray-500 mb-4">or</p>
+          <input type="file" id="fileInput" accept=".pdf" class="hidden" />
+          <button onclick="document.getElementById('fileInput').click()" class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Files</button>
+        </div>
+        <div id="formFields" class="hidden space-y-4">
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="font-semibold mb-3">Signature</h4>
+            <div class="space-y-3">
+              <label class="block text-sm font-medium">Draw Signature
+                <canvas id="signatureCanvas" class="border rounded-lg w-full" style="height:150px;background:white"></canvas>
+              </label>
+              <div class="flex gap-2">
+                <button onclick="clearSignature()" class="px-4 py-2 border rounded-lg hover:bg-gray-50">Clear</button>
+                <button onclick="saveSignature()" class="gradient-bg text-white px-4 py-2 rounded-lg hover-scale">Save Signature</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button id="fillBtn" onclick="fillPDF()" class="gradient-bg text-white px-6 py-3 rounded-lg hover-scale w-full disabled:opacity-50" disabled>Fill & Save PDF</button>
+      </div>` }
+
+    function getEditContent(){ return `
+      <div class="space-y-6">
+        <div class="file-drop-zone p-8 rounded-lg text-center" id="dropZone">
+          <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
+          <p class="text-lg text-gray-600 mb-2">Drag & drop a PDF (rasterize)</p>
+          <p class="text-sm text-gray-500 mb-4">or</p>
+          <input type="file" id="fileInput" accept=".pdf" class="hidden" />
+          <button onclick="document.getElementById('fileInput').click()" class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Files</button>
+        </div>
+        <div id="editOptions" class="hidden space-y-4">
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="font-semibold mb-3">Tools</h4>
+            <div class="grid grid-cols-2 gap-4">
+              <button onclick="selectEditTool('text')" class="p-3 border rounded-lg hover:bg-gray-100 flex flex-col items-center gap-2"><i class="fas fa-font text-2xl text-purple-600"></i><span class="text-sm">Add Text</span></button>
+              <button onclick="selectEditTool('image')" class="p-3 border rounded-lg hover:bg-gray-100 flex flex-col items-center gap-2"><i class="fas fa-image text-2xl text-purple-600"></i><span class="text-sm">Add Image</span></button>
+              <button onclick="selectEditTool('highlight')" class="p-3 border rounded-lg hover:bg-gray-100 flex flex-col items-center gap-2"><i class="fas fa-highlighter text-2xl text-purple-600"></i><span class="text-sm">Highlight</span></button>
+              <button onclick="selectEditTool('draw')" class="p-3 border rounded-lg hover:bg-gray-100 flex flex-col items-center gap-2"><i class="fas fa-pencil-alt text-2xl text-purple-600"></i><span class="text-sm">Draw</span></button>
+            </div>
+          </div>
+          <div id="textOptions" class="bg-gray-50 p-4 rounded-lg hidden">
+            <h4 class="font-semibold mb-3">Text Options</h4>
+            <input type="text" id="editText" placeholder="Enter text" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-500" />
+            <div class="grid grid-cols-2 gap-4 mt-3">
+              <label class="block text-sm font-medium">Font Size<input type="number" id="editFontSize" value="12" min="8" max="72" class="mt-1 w-full px-3 py-2 border rounded" /></label>
+              <label class="block text-sm font-medium">Color<input type="color" id="editTextColor" value="#000000" class="mt-1 w-full h-10 rounded cursor-pointer"/></label>
+            </div>
+          </div>
+          <div id="imageOptions" class="bg-gray-50 p-4 rounded-lg hidden">
+            <h4 class="font-semibold mb-3">Image Options</h4>
+            <input type="file" id="editImage" accept="image/*" class="w-full" />
+          </div>
+          <div id="canvasContainer" class="hidden">
+            <canvas id="editCanvas" class="border rounded-lg w-full" style="max-height:500px"></canvas>
+          </div>
+        </div>
+        <button id="editBtn" onclick="saveEditedPDF()" class="gradient-bg text-white px-6 py-3 rounded-lg hover-scale w-full disabled:opacity-50" disabled>Save Edited PDF</button>
+      </div>` }
+
+    function getMergeContent(){ return `
+      <div class="space-y-6">
+        <div class="file-drop-zone p-8 rounded-lg text-center" id="dropZone">
+          <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
+          <p class="text-lg text-gray-600 mb-2">Drag & drop PDF files</p>
+          <p class="text-sm text-gray-500 mb-4">Order matters — use arrows to reorder</p>
+          <input type="file" id="fileInput" multiple accept=".pdf" class="hidden" />
+          <button onclick="document.getElementById('fileInput').click()" class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Files</button>
+        </div>
+        <div id="fileList" class="space-y-2"></div>
+        <div class="flex justify-end gap-3">
+          <button onclick="clearFiles()" class="px-6 py-2 border rounded-lg hover:bg-gray-50">Clear All</button>
+          <button id="mergeBtn" onclick="mergePDFs()" class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale disabled:opacity-50" disabled>Merge PDFs</button>
+        </div>
+      </div>` }
+
+    function getSplitContent(){ return `
+      <div class="space-y-6">
+        <div class="file-drop-zone p-8 rounded-lg text-center" id="dropZone">
+          <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
+          <p class="text-lg text-gray-600 mb-2">Drag & drop a PDF</p>
+          <p class="text-sm text-gray-500 mb-4">or</p>
+          <input type="file" id="fileInput" accept=".pdf" class="hidden" />
+          <button onclick="document.getElementById('fileInput').click()" class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Files</button>
+        </div>
+        <div id="fileInfo" class="hidden">
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="font-semibold mb-3">Split Options</h4>
+            <div class="space-y-4">
+              <label class="flex items-center gap-2"><input type="radio" name="splitType" value="ranges" checked class="text-purple-600"><span>Page ranges (e.g., 1-3,5,8-10)</span></label>
+              <label class="flex items-center gap-2"><input type="radio" name="splitType" value="single" class="text-purple-600"><span>Split into single pages</span></label>
+              <input type="text" id="splitInput" placeholder="Enter page ranges" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-500" />
+            </div>
+          </div>
+        </div>
+        <button id="splitBtn" onclick="splitPDF()" class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale w-full disabled:opacity-50" disabled>Split PDF</button>
+      </div>` }
+
+    function getCompressContent(){ return `
+      <div class="space-y-6">
+        <div class="file-drop-zone p-8 rounded-lg text-center" id="dropZone">
+          <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
+          <p class="text-lg text-gray-600 mb-2">Drag & drop a PDF</p>
+          <p class="text-sm text-gray-500 mb-4">Downscales pages (raster). Vector/text becomes images.</p>
+          <input type="file" id="fileInput" accept=".pdf" class="hidden" />
+          <button onclick="document.getElementById('fileInput').click()" class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Files</button>
+        </div>
+        <div id="compressionOptions" class="hidden space-y-4">
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="font-semibold mb-3">Compression Level</h4>
+            <div class="space-y-2">
+              <label class="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-gray-100"><div class="flex items-center gap-3"><input type="radio" name="compression" value="low" class="text-purple-600"><div><p class="font-medium">Low</p><p class="text-sm text-gray-500">Best quality, larger file</p></div></div><span class="text-sm text-gray-500">~20%</span></label>
+              <label class="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-gray-100"><div class="flex items-center gap-3"><input type="radio" name="compression" value="medium" checked class="text-purple-600"><div><p class="font-medium">Medium</p><p class="text-sm text-gray-500">Balanced</p></div></div><span class="text-sm text-gray-500">~50%</span></label>
+              <label class="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-gray-100"><div class="flex items-center gap-3"><input type="radio" name="compression" value="high" class="text-purple-600"><div><p class="font-medium">High</p><p class="text-sm text-gray-500">Smallest file, lower quality</p></div></div><span class="text-sm text-gray-500">~80%</span></label>
+            </div>
+          </div>
+        </div>
+        <button id="compressBtn" onclick="compressPDF()" class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale w-full disabled:opacity-50" disabled>Compress PDF</button>
+      </div>` }
+
+    function getConvertContent(){ return `
+      <div class="space-y-6">
+        <div class="file-drop-zone p-8 rounded-lg text-center" id="dropZone">
+          <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
+          <p class="text-lg text-gray-600 mb-2">Drag & drop files to convert</p>
+          <p class="text-sm text-gray-500 mb-4">Supported: Images (JPG, PNG), Text (.txt)</p>
+          <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.txt" class="hidden" />
+          <button onclick="document.getElementById('fileInput').click()" class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Files</button>
+        </div>
+        <div id="convertFileList" class="space-y-2"></div>
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <h4 class="font-semibold mb-2">Options</h4>
+          <label class="flex items-center gap-2"><input id="mergeConverted" type="checkbox" checked class="text-purple-600"><span>Merge all into a single PDF</span></label>
+          <label class="flex items-center gap-2 mt-2"><input id="optimizeConverted" type="checkbox" checked class="text-purple-600"><span>Optimize images for web</span></label>
+        </div>
+        <button id="convertBtn" onclick="convertToPDF()" class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale w-full disabled:opacity-50" disabled>Convert to PDF</button>
+      </div>` }
+
+    function getWatermarkContent(){ return `
+      <div class="space-y-6">
+        <div class="file-drop-zone p-8 rounded-lg text-center" id="dropZone">
+          <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
+          <p class="text-lg text-gray-600 mb-2">Drag & drop a PDF</p>
+          <p class="text-sm text-gray-500 mb-4">or</p>
+          <input type="file" id="fileInput" accept=".pdf" class="hidden" />
+          <button onclick="document.getElementById('fileInput').click()" class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Files</button>
+        </div>
+        <div id="watermarkOptions" class="hidden space-y-4">
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="font-semibold mb-3">Watermark Settings</h4>
+            <label class="block text-sm font-medium">Watermark Text<input type="text" id="watermarkText" placeholder="Enter watermark text" class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-500" /></label>
+            <div class="grid grid-cols-2 gap-4">
+              <label class="block text-sm font-medium">Font Size<input type="range" id="wmFontSize" min="10" max="100" value="30" class="mt-1 w-full"/><span id="fontSizeValue" class="text-xs text-gray-500">30px</span></label>
+              <label class="block text-sm font-medium">Opacity<input type="range" id="wmOpacity" min="0" max="100" value="50" class="mt-1 w-full"/><span id="opacityValue" class="text-xs text-gray-500">50%</span></label>
+            </div>
+            <label class="block text-sm font-medium">Position<select id="watermarkPosition" class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-500"><option value="center">Center</option><option value="top-left">Top Left</option><option value="top-right">Top Right</option><option value="bottom-left">Bottom Left</option><option value="bottom-right">Bottom Right</option><option value="diagonal">Diagonal</option></select></label>
+            <label class="block text-sm font-medium">Color<input type="color" id="watermarkColor" value="#000000" class="mt-1 w-full h-10 rounded cursor-pointer"/></label>
+          </div>
+        </div>
+        <button id="watermarkBtn" onclick="addWatermark()" class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale w-full disabled:opacity-50" disabled>Add Watermark</button>
+      </div>` }
+
+    function getRotateContent(){ return `
+      <div class="space-y-6">
+        <div class="file-drop-zone p-8 rounded-lg text-center" id="dropZone">
+          <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
+          <p class="text-lg text-gray-600 mb-2">Drag & drop a PDF</p>
+          <p class="text-sm text-gray-500 mb-4">or</p>
+          <input type="file" id="fileInput" accept=".pdf" class="hidden" />
+          <button onclick="document.getElementById('fileInput').click()" class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Files</button>
+        </div>
+        <div id="rotateOptions" class="hidden space-y-4">
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="font-semibold mb-3">Rotation Options</h4>
+            <div class="grid grid-cols-4 gap-2">
+              <button onclick="setRotation(90)" class="px-4 py-2 border rounded-lg hover:bg-gray-100">90°</button>
+              <button onclick="setRotation(180)" class="px-4 py-2 border rounded-lg hover:bg-gray-100">180°</button>
+              <button onclick="setRotation(270)" class="px-4 py-2 border rounded-lg hover:bg-gray-100">270°</button>
+              <button onclick="setRotation(0)" class="px-4 py-2 border rounded-lg hover:bg-gray-100">Reset</button>
+            </div>
+            <div class="mt-4">
+              <label class="flex items-center gap-2"><input type="radio" name="rotateScope" value="all" checked class="text-purple-600"><span>Rotate all pages</span></label>
+              <label class="flex items-center gap-2 mt-2"><input type="radio" name="rotateScope" value="specific" class="text-purple-600"><span>Rotate specific pages</span></label>
+              <input type="text" id="rotatePages" placeholder="e.g., 1,3,5 or 1-5" class="mt-2 w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-500" disabled />
+            </div>
+          </div>
+        </div>
+        <button id="rotateBtn" onclick="rotatePDF()" class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale w-full disabled:opacity-50" disabled>Rotate PDF</button>
+      </div>` }
+
+    // Drag & Drop
+    function initializeDragAndDrop(){
+      const dropZone = document.getElementById('dropZone');
+      const fileInput = document.getElementById('fileInput');
+      if(!dropZone || !fileInput) return;
+      dropZone.addEventListener('dragover', (e)=>{ e.preventDefault(); dropZone.classList.add('dragover'); });
+      dropZone.addEventListener('dragleave', ()=> dropZone.classList.remove('dragover'));
+      dropZone.addEventListener('drop', (e)=>{ e.preventDefault(); dropZone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+      fileInput.addEventListener('change', (e)=> handleFiles(e.target.files));
+    }
+
+    function handleFiles(files){
+      uploadedFiles = Array.from(files);
+      if(currentTool==='merge') displayMergeFiles();
+      else if(['split','compress','watermark','rotate'].includes(currentTool)){
+        if(uploadedFiles.length>0){
+          $('#fileInfo')?.classList.remove('hidden');
+          $('#compressionOptions')?.classList.remove('hidden');
+          $('#watermarkOptions')?.classList.remove('hidden');
+          $('#rotateOptions')?.classList.remove('hidden');
+          const btns=['splitBtn','compressBtn','watermarkBtn','rotateBtn']; btns.forEach(id=>{ const b=document.getElementById(id); if(b) b.disabled=false; });
+        }
+      } else if(currentTool==='convert'){
+        displayConvertFiles();
+      } else if(currentTool==='fill'){
+        if(uploadedFiles.length>0){ $('#formFields').classList.remove('hidden'); $('#fillBtn').disabled=false; initializeSignatureCanvas(); }
+      } else if(currentTool==='edit'){
+        if(uploadedFiles.length>0){ $('#editOptions').classList.remove('hidden'); $('#editBtn').disabled=false; initializeEditCanvas(); }
+      }
+    }
+
+    // Merge UI
+    function displayMergeFiles(){
+      const fileList = document.getElementById('fileList');
+      const mergeBtn = document.getElementById('mergeBtn');
+      fileList.innerHTML = uploadedFiles.map((file, i)=>`
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+          <div class="flex items-center gap-3">
+            <i class="fas fa-file-pdf text-red-500"></i>
+            <span class="font-medium">${file.name}</span>
+            <span class="text-sm text-gray-500">(${formatFileSize(file.size)})</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="moveFile(${i},-1)" class="text-gray-500 hover:text-gray-700" ${i===0?'disabled':''}><i class="fas fa-chevron-up"></i></button>
+            <button onclick="moveFile(${i},1)" class="text-gray-500 hover:text-gray-700" ${i===uploadedFiles.length-1?'disabled':''}><i class="fas fa-chevron-down"></i></button>
+            <button onclick="removeFile(${i})" class="text-red-500 hover:text-red-700"><i class="fas fa-times"></i></button>
+          </div>
+        </div>`).join('');
+      mergeBtn.disabled = uploadedFiles.length < 2;
+    }
+    function displayConvertFiles(){
+      const list = document.getElementById('convertFileList');
+      const btn = document.getElementById('convertBtn');
+      list.innerHTML = uploadedFiles.map((file,i)=>`
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+          <div class="flex items-center gap-3"><i class="fas fa-file text-blue-500"></i><span class="font-medium">${file.name}</span><span class="text-sm text-gray-500">(${formatFileSize(file.size)})</span></div>
+          <button onclick="removeFile(${i})" class="text-red-500 hover:text-red-700"><i class="fas fa-times"></i></button>
+        </div>`).join('');
+      btn.disabled = uploadedFiles.length===0;
+    }
+    function moveFile(i,dir){ const j=i+dir; if(j>=0 && j<uploadedFiles.length){ [uploadedFiles[i], uploadedFiles[j]]=[uploadedFiles[j], uploadedFiles[i]]; displayMergeFiles(); } }
+    function removeFile(i){ uploadedFiles.splice(i,1); if(currentTool==='merge') displayMergeFiles(); else if(currentTool==='convert') displayConvertFiles(); }
+    function clearFiles(){ uploadedFiles=[]; if(currentTool==='merge') displayMergeFiles(); }
+
+    // ---- Create PDF ----
+    function createPDF(){ const type = document.querySelector('input[name="createType"]:checked').value; if(type==='text') createTextPDF(); else if(type==='images') createImagePDF(); else createBlankPDF(); }
+    function createTextPDF(){ const { jsPDF }=window.jspdf; const pdf=new jsPDF(); const title=$('#docTitle').value||'Untitled Document'; const content=$('#textContent').innerText; const fs=parseInt($('#fontSizeSelect').value,10); pdf.setFontSize(fs); pdf.text(title,20,20); const lines=pdf.splitTextToSize(content, 170); pdf.text(lines,20,40); pdf.save(`${title}.pdf`); notify('PDF created successfully!', 'success'); }
+    function createImagePDF(){ if(uploadedImages.length===0){ notify('Please upload images', 'error'); return; } const { jsPDF }=window.jspdf; const pdf=new jsPDF(); uploadedImages.forEach((img,idx)=>{ if(idx>0) pdf.addPage(); const w=pdf.internal.pageSize.getWidth(); const h=pdf.internal.pageSize.getHeight(); pdf.addImage(img,'JPEG',0,0,w,h); }); pdf.save('images.pdf'); notify('PDF created from images!', 'success'); }
+    function createBlankPDF(){ const { jsPDF }=window.jspdf; const pageSize=$('#pageSize').value; const pageCount=parseInt($('#pageCount').value,10); const orientation=$('#orientation').value; const pdf=new jsPDF({ orientation, unit:'mm', format: pageSize }); for(let i=1;i<pageCount;i++){ pdf.addPage(); } pdf.save('blank.pdf'); notify('Blank PDF created!', 'success'); }
+
+    // ---- Fill & Sign (simple overlay) ----
+    function initializeSignatureCanvas(){ const canvas=$('#signatureCanvas'); const ctx=canvas.getContext('2d'); let drawing=false; const setSize=()=>{ canvas.width=canvas.offsetWidth; canvas.height=150; }; setSize(); window.addEventListener('resize', setSize); ctx.strokeStyle='#000'; ctx.lineWidth=2; ctx.lineCap='round'; const pos=(e)=>{ const r=canvas.getBoundingClientRect(); return {x:(e.touches?e.touches[0].clientX:e.clientX)-r.left, y:(e.touches?e.touches[0].clientY:e.clientY)-r.top}; };
+      const start=(e)=>{ drawing=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); };
+      const move=(e)=>{ if(!drawing) return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); };
+      const stop=()=> drawing=false;
+      canvas.addEventListener('mousedown',start); canvas.addEventListener('mousemove',move); canvas.addEventListener('mouseup',stop); canvas.addEventListener('mouseleave',stop);
+      canvas.addEventListener('touchstart',start,{passive:true}); canvas.addEventListener('touchmove',move,{passive:true}); canvas.addEventListener('touchend',stop);
+    }
+    function clearSignature(){ const c=$('#signatureCanvas'); const ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); }
+    function saveSignature(){ const c=$('#signatureCanvas'); window.savedSignature=c.toDataURL('image/png'); notify('Signature saved!', 'success'); }
+    async function fillPDF(){ if(uploadedFiles.length===0) return; notify('Stamping signature...', 'info'); try{ const srcBytes=await uploadedFiles[0].arrayBuffer(); const pdfDoc=await PDFLib.PDFDocument.load(srcBytes); if(window.savedSignature){ const png=await pdfDoc.embedPng(window.savedSignature); const pngDims=png.scale(0.5); const pages=pdfDoc.getPages(); pages.forEach((p)=>{ const { width, height }=p.getSize(); p.drawImage(png,{ x: width - pngDims.width - 24, y: 24, width: pngDims.width, height: pngDims.height }); }); }
+      const out=await pdfDoc.save({ updateFieldAppearances:true, useObjectStreams:true }); downloadBytes(out, 'filled.pdf'); notify('PDF saved with signature!', 'success'); } catch(e){ console.error(e); notify('Error filling PDF', 'error'); } }
+
+    // ---- Edit (Canvas raster) ----
+    function initializeEditCanvas(){ const canvas=$('#editCanvas'); const ctx=canvas.getContext('2d'); canvas.width=600; canvas.height=800; ctx.fillStyle='white'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle='black'; ctx.font='16px Arial'; ctx.fillText('Use tools to annotate; export as image-based PDF.', 24, 40); show($('#canvasContainer')); }
+    function selectEditTool(tool){ hide($('#textOptions')); hide($('#imageOptions')); if(tool==='text') show($('#textOptions')); if(tool==='image') show($('#imageOptions')); show($('#canvasContainer')); }
+    function saveEditedPDF(){ const canvas=$('#editCanvas'); const { jsPDF }=window.jspdf; const pdf=new jsPDF(); const img=canvas.toDataURL('image/png'); const w=pdf.internal.pageSize.getWidth(); const h=pdf.internal.pageSize.getHeight(); pdf.addImage(img,'PNG',0,0,w,h); pdf.save('edited.pdf'); notify('PDF saved!', 'success'); }
+
+    // ---- Merge (vector-preserving) ----
+    async function mergePDFs(){ if(uploadedFiles.length<2) return; notify('Merging PDFs...', 'info'); try{ const outDoc = await PDFLib.PDFDocument.create(); for(const file of uploadedFiles){ const bytes = await file.arrayBuffer(); const src = await PDFLib.PDFDocument.load(bytes); const pageIndices = src.getPageIndices(); const copied = await outDoc.copyPages(src, pageIndices); copied.forEach(p=> outDoc.addPage(p)); }
+      const out = await outDoc.save({ useObjectStreams:true }); downloadBytes(out, 'merged.pdf'); notify('PDFs merged successfully!', 'success'); } catch(e){ console.error(e); notify('Error merging PDFs', 'error'); } }
+
+    // ---- Split ----
+    function parseRanges(input, max){ if(!input) return []; const parts=input.split(',').map(s=>s.trim()).filter(Boolean); const pages=new Set(); for(const part of parts){ if(part.includes('-')){ const [a,b]=part.split('-').map(n=>parseInt(n,10)); if(!isNaN(a)&&!isNaN(b)) for(let i=Math.max(1,a); i<=Math.min(max,b); i++) pages.add(i); } else { const n=parseInt(part,10); if(!isNaN(n) && n>=1 && n<=max) pages.add(n); } } return Array.from(pages).sort((x,y)=>x-y); }
+    async function splitPDF(){ if(uploadedFiles.length===0) return; notify('Splitting PDF...', 'info'); try{ const file=uploadedFiles[0]; const bytes=await file.arrayBuffer(); const src=await PDFLib.PDFDocument.load(bytes); const total=src.getPageCount(); const type = document.querySelector('input[name="splitType"]:checked').value;
+      if(type==='single'){ for(let i=0;i<total;i++){ const out=await PDFLib.PDFDocument.create(); const [p]=await out.copyPages(src,[i]); out.addPage(p); const data=await out.save({useObjectStreams:true}); downloadBytes(data, `page_${i+1}.pdf`); } notify('Split into single pages!', 'success'); return; }
+      const rng=$('#splitInput').value; const list=parseRanges(rng, total); if(list.length===0){ notify('Enter valid ranges', 'error'); return; } const out=await PDFLib.PDFDocument.create(); const copied = await out.copyPages(src, list.map(n=>n-1)); copied.forEach(p=> out.addPage(p)); const data=await out.save({useObjectStreams:true}); downloadBytes(data, 'split.pdf'); notify('Page ranges exported!', 'success'); } catch(e){ console.error(e); notify('Error splitting PDF', 'error'); } }
+
+    // ---- Compress (rasterize via PDF.js + jsPDF) ----
+    async function compressPDF(){ if(uploadedFiles.length===0) return; notify('Compressing (this rasterizes pages)...', 'info'); try{ const file=uploadedFiles[0]; const arrayBuffer=await file.arrayBuffer(); const pdf=await pdfjsLib.getDocument({data: arrayBuffer}).promise; const { jsPDF }=window.jspdf; const out=new jsPDF(); const level=document.querySelector('input[name="compression"]:checked').value; let scale=1.5, quality=0.9; if(level==='high'){ scale=1.0; quality=0.6; } else if(level==='medium'){ scale=1.2; quality=0.75; }
+      for(let p=1;p<=pdf.numPages;p++){ const page=await pdf.getPage(p); const viewport=page.getViewport({ scale }); const canvas=document.createElement('canvas'); const ctx=canvas.getContext('2d'); canvas.height=viewport.height; canvas.width=viewport.width; await page.render({ canvasContext: ctx, viewport }).promise; const img=canvas.toDataURL('image/jpeg', quality); if(p>1) out.addPage(); const w=out.internal.pageSize.getWidth(); const h=out.internal.pageSize.getHeight(); out.addImage(img,'JPEG',0,0,w,h); }
+      out.save('compressed.pdf'); notify('Compressed PDF ready!', 'success'); } catch(e){ console.error(e); notify('Error compressing PDF', 'error'); } }
+
+    // ---- Convert ----
+    async function convertToPDF(){ if(uploadedFiles.length===0) return; notify('Converting files...', 'info'); try{ const { jsPDF }=window.jspdf; const merge=$('#mergeConverted').checked; const optimize=$('#optimizeConverted').checked; if(merge){ const pdf=new jsPDF(); let first=true; for(const file of uploadedFiles){ if(file.type.startsWith('image/')){ const img=await fileToImage(file); if(!first) pdf.addPage(); first=false; const w=pdf.internal.pageSize.getWidth(); const h=(img.height* w)/img.width; pdf.addImage(img, 'JPEG', 0, 0, w, h, undefined, optimize? 'FAST':'SLOW'); }
+          else if(file.type==='text/plain'){ const txt = await file.text(); const lines = pdf.splitTextToSize(txt, 170); if(!first) pdf.addPage(); first=false; pdf.text(lines, 20, 20); }
+        }
+        pdf.save('converted.pdf');
+      } else { // one PDF per file
+        for(const file of uploadedFiles){ if(file.type.startsWith('image/')){ const img=await fileToImage(file); const pdf=new jsPDF(); const w=pdf.internal.pageSize.getWidth(); const h=(img.height* w)/img.width; pdf.addImage(img,'JPEG',0,0,w,h); pdf.save(`${file.name.replace(/\.[^.]+$/, '')}.pdf`); } else if(file.type==='text/plain'){ const pdf=new jsPDF(); const txt=await file.text(); const lines=pdf.splitTextToSize(txt,170); pdf.text(lines,20,20); pdf.save(`${file.name.replace(/\.[^.]+$/, '')}.pdf`); } }
+      }
+      notify('Conversion complete!', 'success'); } catch(e){ console.error(e); notify('Error converting files', 'error'); } }
+    function fileToImage(file){ return new Promise((res)=>{ const img=new Image(); img.onload=()=>res(img); img.src=URL.createObjectURL(file); }); }
+
+    // ---- Watermark (vector-preserving) ----
+    async function addWatermark(){ if(uploadedFiles.length===0) return; notify('Adding watermark...', 'info'); try{ const file=uploadedFiles[0]; const bytes=await file.arrayBuffer(); const doc=await PDFLib.PDFDocument.load(bytes); const text=$('#watermarkText').value||'WATERMARK'; const size=parseInt($('#wmFontSize').value,10)||30; const opacity=parseInt($('#wmOpacity').value,10)/100; const pos=$('#watermarkPosition').value; const {r,g,b}=hexToRgb($('#watermarkColor').value); const color=PDFLib.rgb(r/255,g/255,b/255);
+      for(const page of doc.getPages()){ const { width, height }=page.getSize(); let x=width/2, y=height/2, rotate=0; if(pos==='top-left'){ x=24; y=height-24; } else if(pos==='top-right'){ x=width-24; y=height-24; } else if(pos==='bottom-left'){ x=24; y=24; } else if(pos==='bottom-right'){ x=width-24; y=24; } else if(pos==='diagonal'){ rotate=45; }
+        page.drawText(text,{ x, y, size, color, opacity, rotate: PDFLib.degrees(rotate), xSkew: 0, ySkew: 0, font: undefined, 
+          ...(pos==='center'||pos==='diagonal'? { x: width/2 - (size*text.length*0.25), y: height/2 } : {})
+        });
+      }
+      const out=await doc.save({ useObjectStreams:true }); downloadBytes(out, 'watermarked.pdf'); notify('Watermark added!', 'success'); } catch(e){ console.error(e); notify('Error adding watermark', 'error'); } }
+
+    // ---- Rotate (vector-preserving) ----
+    let rotationAngle = 0;
+    function setRotation(deg){ rotationAngle = deg; notify(`Rotation set to ${deg}°`, 'info'); }
+    async function rotatePDF(){ if(uploadedFiles.length===0) return; notify('Rotating pages...', 'info'); try{ const file=uploadedFiles[0]; const bytes=await file.arrayBuffer(); const doc=await PDFLib.PDFDocument.load(bytes); const scope=document.querySelector('input[name="rotateScope"]:checked').value; let targets=[]; if(scope==='all'){ targets=doc.getPages().map((_,i)=>i); } else { const txt=$('#rotatePages').value; const total=doc.getPageCount(); targets=parseRanges(txt,total).map(n=>n-1); if(targets.length===0){ notify('Enter valid page numbers', 'error'); return; } }
+      const rot=PDFLib.degrees(rotationAngle);
+      targets.forEach(i=>{ const p=doc.getPage(i); p.setRotation(rot); });
+      const out=await doc.save({ useObjectStreams:true }); downloadBytes(out,'rotated.pdf'); notify('Rotation complete!', 'success'); } catch(e){ console.error(e); notify('Error rotating PDF', 'error'); } }
+
+    // Image upload for Create -> Images
+    document.addEventListener('change', (e)=>{
+      if(e.target.id==='imageInput') handleImageUpload(e.target.files);
+      if(e.target.id==='wmFontSize') $('#fontSizeValue').textContent = e.target.value + 'px';
+      if(e.target.id==='wmOpacity') $('#opacityValue').textContent = e.target.value + '%';
+    });
+
+    function handleImageUpload(files){ uploadedImages=[]; const list=$('#imageList'); list.innerHTML=''; Array.from(files).forEach((file, idx)=>{ const reader=new FileReader(); reader.onload=(ev)=>{ uploadedImages.push(ev.target.result); const div=document.createElement('div'); div.className='flex items-center justify-between p-3 bg-gray-50 rounded-lg'; div.innerHTML=`<div class="flex items-center gap-3"><img src="${ev.target.result}" class="w-12 h-12 object-cover rounded" alt="uploaded image ${idx+1}"><span class="font-medium">${file.name}</span></div><button class="text-red-500 hover:text-red-700" aria-label="Remove image" onclick="removeImage(${uploadedImages.length-1})"><i class='fas fa-times'></i></button>`; list.appendChild(div); }; reader.readAsDataURL(file); }); }
+    function removeImage(i){ uploadedImages.splice(i,1); const list=$('#imageList'); list.innerHTML=''; uploadedImages.forEach((src, idx)=>{ const div=document.createElement('div'); div.className='flex items-center justify-between p-3 bg-gray-50 rounded-lg'; div.innerHTML=`<div class=\"flex items-center gap-3\"><img src=\"${src}\" class=\"w-12 h-12 object-cover rounded\" alt=\"uploaded image ${idx+1}\"><span class=\"font-medium\">Image ${idx+1}</span></div>`; list.appendChild(div); }); }
+
+    // Enable/disable inputs on rotate scope change
+    document.addEventListener('change', (e)=>{
+      if(e.target.name==='rotateScope'){ const rp=$('#rotatePages'); if(rp) rp.disabled = e.target.value !== 'specific'; }
+    });
+
+    // Footer year
+    document.addEventListener('DOMContentLoaded', ()=>{ document.getElementById('year').textContent = new Date().getFullYear(); });
+  </script>
+</body>
+</html>
