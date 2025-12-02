@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#11151d" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <title>Checklist Hub</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <script defer src="./js/main.js"></script>
+</head>
+<body>
+  <header class="site-header" role="banner">
+    <div class="brand">
+      <!-- Your logo -->
+      <img class="brand-logo" src="./assets/logofinal.png" alt="MV Electronix" width="44" height="44" />
+      <div>
+        <h1 class="site-title">Checklist Hub</h1>
+        <p class="site-subtitle">Clean, fast, and saved locally.</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="theme-toggle" aria-label="Toggle theme" title="Toggle theme"></button>
+      <button class="btn small hdr-export" title="Export all checklists">Export</button>
+      <label class="btn small" title="Import backup">Import
+        <input type="file" id="hdrImport" accept="application/json" hidden />
+      </label>
+    </div>
+  </header>
+
+  <main class="container" id="content">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-text">
+        <p class="eyebrow">Organize once, reuse daily</p>
+        <h2 id="hero-title">Stay on top of work, home, and everything between.</h2>
+        <p class="hero-lede">Jump into the everyday routine or pick the checklist you need. Everything autosaves locally and exports in one click.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="./checklists/everyday.html">Open Everyday Checklist</a>
+          <a class="btn ghost" href="#checklists">Browse all checklists</a>
+        </div>
+        <ul class="hero-highlights" aria-label="Highlights">
+          <li>Local-first & offline friendly</li>
+          <li>Autosave with undo safety</li>
+          <li>One-click export & import</li>
+        </ul>
+      </div>
+      <div class="hero-panel" aria-label="Quick tips">
+        <h3>Quick tips</h3>
+        <ul>
+          <li><strong>Shift + click</strong> to toggle a range of items.</li>
+          <li>Use the <strong>theme toggle</strong> for dark/light comfort.</li>
+          <li><strong>Export</strong> regularly to keep a portable backup.</li>
+        </ul>
+        <div class="hero-chip-row" aria-label="Capabilities">
+          <span class="chip">Keyboard friendly</span>
+          <span class="chip">Print-ready</span>
+          <span class="chip">No accounts</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-header" id="checklists">
+      <div>
+        <p class="eyebrow">Checklists</p>
+        <h2 class="section-title">Choose a checklist to start</h2>
+        <p class="section-lede">Everything is built to be quick to scan, edit, and export. Open any card to get the exact steps you need.</p>
+      </div>
+    </div>
+
+    <section class="grid-cards" aria-label="Available checklists">
+      <a class="card" href="./checklists/everyday.html">
+        <div class="card-icon">🗒️</div>
+        <div class="card-body">
+          <h3 class="card-title">Everyday Checklist</h3>
+          <p class="card-desc">Simple routine for daily tasks.</p>
+        </div>
+      </a>
+      <a class="card" href="./checklists/repair-intake.html">
+        <div class="card-icon">🛠️</div>
+        <div class="card-body">
+          <h3 class="card-title">Repair Intake</h3>
+          <p class="card-desc">Customer/device details and condition log.</p>
+        </div>
+      </a>
+      <a class="card" href="./checklists/business-setup.html">
+        <div class="card-icon">🏢</div>
+        <div class="card-body">
+          <h3 class="card-title">Business Setup</h3>
+          <p class="card-desc">Entity, banking, insurance, compliance.</p>
+        </div>
+      </a>
+      <a class="card" href="./checklists/equipment-diagnostics.html">
+        <div class="card-icon">🔍</div>
+        <div class="card-body">
+          <h3 class="card-title">Diagnostics</h3>
+          <p class="card-desc">Symptoms, tests, and results.</p>
+        </div>
+      </a>
+      <a class="card" href="./checklists/quality-control.html">
+        <div class="card-icon">✅</div>
+        <div class="card-body">
+          <h3 class="card-title">Quality Control</h3>
+          <p class="card-desc">Pre‑ship checks and verification.</p>
+        </div>
+      </a>
+      <a class="card" href="./checklists/starting-job.html">
+        <div class="card-icon">🚀</div>
+        <div class="card-body">
+          <h3 class="card-title">Starting a Job</h3>
+          <p class="card-desc">Scope, parts, estimates, milestones.</p>
+        </div>
+      </a>
+      <a class="card" href="./checklists/travel.html">
+        <div class="card-icon">🧳</div>
+        <div class="card-body">
+          <h3 class="card-title">Travel</h3>
+          <p class="card-desc">Packing, docs, logistics.</p>
+        </div>
+      </a>
+      <a class="card" href="./checklists/homeschool.html">
+        <div class="card-icon">📚</div>
+        <div class="card-body">
+          <h3 class="card-title">Homeschool</h3>
+          <p class="card-desc">Curriculum, schedule, progress tracking.</p>
+        </div>
+      </a>
+    </section>
+  </main>
+</body>
+</html>
