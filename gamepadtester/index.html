@@ -2,12 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Gamepad Tester – M.V. Electronix</title>
+  <title>Gamepad Diagnostics Suite | M.V. Electronix</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Professional gamepad testing and calibration tool. Test buttons, analog sticks, triggers, and calibrate controllers in real-time.">
+  
+  <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  
   <style>
+    :root {
+      --primary: #0066ff;
+      --primary-dark: #0052d4;
+      --primary-light: #3385ff;
+      --secondary: #8a2be2;
+      --accent: #00d4aa;
+      --success: #00c853;
+      --warning: #ffb300;
+      --danger: #ff5252;
+      --dark-bg: #0a0f1c;
+      --darker-bg: #070b14;
+      --card-bg: rgba(20, 25, 40, 0.8);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-primary: #ffffff;
+      --text-secondary: #b0b8d0;
+      --text-muted: #7a85a5;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      --shadow-light: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -15,269 +42,838 @@
     }
 
     body { 
-      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
-      color: #e8e8e8; 
+      background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 50%, #1a1f35 100%);
+      color: var(--text-primary); 
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      text-align: center;
       min-height: 100vh;
-      padding: 2rem 1rem;
       line-height: 1.6;
+      position: relative;
+      overflow-x: hidden;
     }
 
-    .container {
-      max-width: 800px;
+    /* Background animation */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .bg-circle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+      opacity: 0.03;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+      max-width: 1000px;
       margin: 0 auto;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 20px;
-      padding: 3rem 2rem;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     }
 
-    h1 { 
-      color: #ffffff;
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 700;
-      margin-bottom: 2rem;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-    }
-
-    #status { 
-      margin: 1.5rem 0;
-      font-size: 1.1rem;
-      color: #a0a0a0;
-      font-weight: 500;
-    }
-
-    #gamepad-info { 
-      font-size: 1.1em; 
-      margin-bottom: 2rem;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 1rem;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .pad-grid {
-      display: grid;
-      grid-template-columns: repeat(8, 50px);
-      gap: 10px;
-      justify-content: center;
-      margin: 2rem auto 2rem;
-      max-width: 450px;
-    }
-
-    .btn {
-      width: 48px; 
-      height: 48px;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      font-size: 0.9rem;
-      font-weight: 600;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex; 
-      align-items: center; 
-      justify-content: center;
-      color: #ffffff;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .btn.on {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #ffffff;
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-      border-color: rgba(102, 126, 234, 0.5);
-      transform: scale(1.05);
-    }
-
-    .axis-container {
-      margin: 2rem 0;
-    }
-
-    .axis-label {
-      font-weight: 600;
-      color: #ffffff;
-      margin-bottom: 0.5rem;
-      font-size: 1rem;
-    }
-
-    .axis-bar {
-      background: rgba(255, 255, 255, 0.05);
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      width: 200px;
-      height: 16px;
-      margin: 0.8em auto 1.5rem;
-      overflow: hidden;
-      position: relative;
       display: flex;
       align-items: center;
+      justify-content: center;
+      gap: 1rem;
     }
 
-    .axis-dot {
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Status Bar */
+    .status-bar {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin: 2rem auto;
+      max-width: 1000px;
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--danger);
+      animation: pulse 2s infinite;
+    }
+
+    .status-dot.connected {
+      background: var(--success);
+      animation: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .controller-info {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-sm);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+    }
+
+    /* Main Dashboard */
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem 3rem;
+    }
+
+    @media (max-width: 900px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Button Grid */
+    .button-grid-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 2rem;
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(10px);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--card-border);
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .button-count {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 600px) {
+      .button-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .button-item {
+      aspect-ratio: 1;
+      border: 2px solid var(--card-border);
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .button-item.pressed {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-color: var(--primary);
+      box-shadow: 0 8px 20px rgba(0, 102, 255, 0.3);
+      transform: scale(0.95);
+    }
+
+    .button-index {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: inherit;
+    }
+
+    .button-value {
+      font-size: 0.7rem;
+      opacity: 0.8;
+      margin-top: 0.25rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Analog Sticks */
+    .analog-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 2rem;
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(10px);
+    }
+
+    .sticks-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .sticks-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stick-display {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+      border: 2px solid var(--card-border);
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .stick-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 4px;
+      height: 4px;
+      background: var(--text-muted);
+      border-radius: 50%;
+    }
+
+    .stick-grid {
       position: absolute;
       top: 0;
-      width: 20px;
-      height: 20px;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .stick-grid-line {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .stick-grid-line.horizontal {
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      transform: translateY(-50%);
+    }
+
+    .stick-grid-line.vertical {
+      left: 50%;
+      top: 0;
+      width: 1px;
+      height: 100%;
+      transform: translateX(-50%);
+    }
+
+    .stick-indicator {
+      position: absolute;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      transform: translateX(-10px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      transform: translate(-50%, -50%);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      border: 2px solid white;
       transition: all 0.1s ease;
     }
 
-    .calibration-section {
-      margin: 3rem auto 2rem;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 2rem;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      max-width: 400px;
+    .stick-label {
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
     }
 
-    .calibration-button {
-      padding: 0.8rem 2rem;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #ffffff;
+    .stick-values {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+    }
+
+    .stick-value {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      min-width: 70px;
+      text-align: center;
+    }
+
+    /* Calibration Panel */
+    .calibration-panel {
+      grid-column: 1 / -1;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 2rem;
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(10px);
+      margin-top: 1rem;
+    }
+
+    .calibration-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .calibration-btn {
+      padding: 0.9rem 1.8rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
       font-family: 'Inter', sans-serif;
-      border: none;
-      border-radius: 12px;
-      font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
     }
 
-    .calibration-button:hover {
+    .calibration-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--primary);
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
     }
 
-    .calibration-button:active {
-      transform: translateY(0);
+    .calibration-btn.primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-color: transparent;
     }
 
-    #calib-info {
-      margin-top: 1rem;
-      font-size: 1rem;
-      color: #a0a0a0;
-      font-weight: 500;
+    .calibration-btn.primary:hover {
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+      box-shadow: 0 8px 20px rgba(0, 102, 255, 0.3);
     }
 
-    footer { 
-      color: #808080; 
-      margin-top: 3rem; 
+    .calibration-info {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: rgba(0, 102, 255, 0.1);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(0, 102, 255, 0.3);
+      font-size: 0.95rem;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--text-muted);
       font-size: 0.9rem;
-      font-weight: 400;
+      border-top: 1px solid var(--card-border);
+      background: rgba(10, 15, 28, 0.7);
     }
 
-    @media (max-width: 768px) {
-      .container {
-        padding: 2rem 1rem;
-      }
-      
-      .pad-grid {
-        grid-template-columns: repeat(6, 45px);
-        gap: 8px;
-      }
-      
-      .btn {
-        width: 43px;
-        height: 43px;
-        font-size: 0.8rem;
-      }
-      
-      .axis-bar {
-        width: 180px;
-        height: 14px;
-      }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
     }
 
-    /* Smooth animations */
-    * {
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .button-grid-container, .analog-container, .calibration-panel {
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    .button-grid-container { animation-delay: 0.1s; }
+    .analog-container { animation-delay: 0.2s; }
+    .calibration-panel { animation-delay: 0.3s; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--success);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🎮 Gamepad Tester</h1>
-    <div id="status">Connect a gamepad &amp; press any button…</div>
-    <div id="gamepad-info"></div>
-    <div class="pad-grid" id="buttons"></div>
-    <div id="axes"></div>
-    <div class="calibration-section" id="calibration-section">
-      <button id="set-center" class="calibration-button">Set Center</button>
-      <div id="calib-info"></div>
+  <!-- Background Animation -->
+  <div class="bg-animation" id="bgAnimation"></div>
+
+  <!-- Header -->
+  <div class="header">
+    <h1><i class="fas fa-gamepad"></i> Gamepad Diagnostics Suite</h1>
+    <p class="subtitle">Professional controller testing and calibration tool</p>
+    <p style="color: var(--text-muted); max-width: 800px; margin: 0 auto;">
+      Connect any gamepad, joystick, or controller to test buttons, analog sticks, triggers, and calibrate for optimal performance.
+    </p>
+  </div>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div class="status-indicator">
+      <div class="status-dot" id="statusDot"></div>
+      <span id="statusText">Connect a gamepad and press any button...</span>
+    </div>
+    <div class="controller-info" id="controllerInfo">No controller detected</div>
+  </div>
+
+  <!-- Main Dashboard -->
+  <div class="dashboard">
+    <!-- Button Grid -->
+    <div class="button-grid-container">
+      <div class="section-header">
+        <h3 class="section-title"><i class="fas fa-keyboard"></i> Buttons & Triggers</h3>
+        <div class="button-count">Buttons: <span id="buttonCount">0</span></div>
+      </div>
+      <div class="button-grid" id="buttonGrid">
+        <!-- Buttons will be dynamically generated -->
+      </div>
+    </div>
+
+    <!-- Analog Sticks -->
+    <div class="analog-container">
+      <div class="section-header">
+        <h3 class="section-title"><i class="fas fa-bullseye"></i> Analog Sticks</h3>
+        <div class="button-count">Axes: <span id="axisCount">0</span></div>
+      </div>
+      <div class="sticks-grid" id="sticksGrid">
+        <!-- Sticks will be dynamically generated -->
+      </div>
+    </div>
+
+    <!-- Calibration Panel -->
+    <div class="calibration-panel">
+      <div class="section-header">
+        <h3 class="section-title"><i class="fas fa-sliders-h"></i> Calibration Tools</h3>
+      </div>
+      <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+        Calibrate your controller for optimal performance. Center calibration helps correct stick drift.
+      </p>
+      
+      <div class="calibration-controls">
+        <button class="calibration-btn primary" onclick="setCenterCalibration()">
+          <i class="fas fa-crosshairs"></i> Set Center Position
+        </button>
+        <button class="calibration-btn" onclick="resetCalibration()">
+          <i class="fas fa-redo"></i> Reset Calibration
+        </button>
+        <button class="calibration-btn" onclick="testVibration()">
+          <i class="fas fa-vibrate"></i> Test Vibration
+        </button>
+        <button class="calibration-btn" onclick="copyDiagnostics()">
+          <i class="fas fa-copy"></i> Copy Diagnostics
+        </button>
+      </div>
+      
+      <div class="calibration-info" id="calibrationInfo">
+        <i class="fas fa-info-circle"></i> Center calibration helps compensate for stick drift. Press "Set Center Position" when sticks are at rest.
+      </div>
     </div>
   </div>
-  <footer>
-    M.V. Electronix — Gamepad Tester • Powered by the Gamepad API
-  </footer>
-  <script>
-    let calibration = { axes: [] };
 
-    document.getElementById("set-center").onclick = function() {
+  <!-- Footer -->
+  <footer>
+    <div class="footer-brand">
+      <i class="fas fa-bolt"></i> M.V. Electronix — Gamepad Diagnostics Suite
+    </div>
+    <p>Powered by the Web Gamepad API • Works with Xbox, PlayStation, Nintendo, and generic controllers</p>
+  </footer>
+
+  <script>
+    // Calibration data
+    let calibration = { 
+      axes: [], 
+      deadzones: [0.05, 0.05, 0.05, 0.05],
+      timestamp: null 
+    };
+
+    // Initialize background animation
+    function initBackground() {
+      const bg = document.getElementById('bgAnimation');
+      for (let i = 0; i < 12; i++) {
+        const circle = document.createElement('div');
+        circle.className = 'bg-circle';
+        const size = Math.random() * 200 + 50;
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        const duration = Math.random() * 30 + 20;
+        const delay = Math.random() * 5;
+        
+        circle.style.width = `${size}px`;
+        circle.style.height = `${size}px`;
+        circle.style.left = `${x}%`;
+        circle.style.top = `${y}%`;
+        circle.style.animation = `float ${duration}s infinite ease-in-out`;
+        circle.style.animationDelay = `${delay}s`;
+        
+        bg.appendChild(circle);
+      }
+      
+      // Add floating animation
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes float {
+          0%, 100% { transform: translate(0, 0); }
+          33% { transform: translate(${Math.random()*30-15}px, ${Math.random()*30-15}px); }
+          66% { transform: translate(${Math.random()*30-15}px, ${Math.random()*30-15}px); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // Show toast notification
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.style.background = type === 'success' ? 'var(--success)' : 
+                              type === 'warning' ? 'var(--warning)' : 
+                              type === 'error' ? 'var(--danger)' : 'var(--primary)';
+      
+      toast.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+        ${message}
+      `;
+      
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        setTimeout(() => document.body.removeChild(toast), 300);
+      }, 3000);
+    }
+
+    // Calibration functions
+    function setCenterCalibration() {
       const gamepads = navigator.getGamepads();
       for (let gp of gamepads) {
         if (gp) {
           calibration.axes = gp.axes.slice();
-          document.getElementById("calib-info").innerText = "Center set!";
-          setTimeout(() => document.getElementById("calib-info").innerText = "", 1000);
+          calibration.timestamp = new Date().toISOString();
+          localStorage.setItem('gamepadCalibration', JSON.stringify(calibration));
+          showToast('Center position calibrated successfully!', 'success');
+          updateCalibrationInfo();
           break;
         }
       }
-    };
+    }
 
-    function updateGamepadStatus() {
-      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
-      let found = false;
+    function resetCalibration() {
+      calibration.axes = [];
+      calibration.timestamp = null;
+      localStorage.removeItem('gamepadCalibration');
+      showToast('Calibration reset to defaults', 'info');
+      updateCalibrationInfo();
+    }
+
+    function testVibration() {
+      const gamepads = navigator.getGamepads();
       for (let gp of gamepads) {
-        if (!gp) continue;
-        found = true;
-        document.getElementById("gamepad-info").innerHTML =
-          `<b>${gp.id}</b><br>Index: ${gp.index}, Buttons: ${gp.buttons.length}, Axes: ${gp.axes.length}`;
-        // Buttons
-        let btns = '';
-        for (let i=0; i<gp.buttons.length; i++) {
-          btns += `<div class="btn${gp.buttons[i].pressed ? ' on' : ''}">${i}</div>`;
+        if (gp && gp.vibrationActuator) {
+          // Try to trigger vibration if supported
+          try {
+            gp.vibrationActuator.playEffect("dual-rumble", {
+              startDelay: 0,
+              duration: 300,
+              weakMagnitude: 1.0,
+              strongMagnitude: 0.5
+            });
+            showToast('Vibration test triggered', 'success');
+          } catch (e) {
+            showToast('Vibration not supported on this controller', 'warning');
+          }
+          break;
         }
-        document.getElementById("buttons").innerHTML = btns;
-
-        // Axes
-        let axesHtml = '';
-        for (let i=0; i<gp.axes.length; i++) {
-          const value = gp.axes[i];
-          const calibratedValue = calibration.axes[i] !== undefined ? value - calibration.axes[i] : value;
-          const position = ((calibratedValue + 1) / 2) * 100;
-          axesHtml += `
-            <div class="axis-container">
-              <div class="axis-label">Axis ${i}</div>
-              <div class="axis-bar">
-                <div class="axis-dot" style="left: ${position}%"></div>
-              </div>
-            </div>
-          `;
-        }
-        document.getElementById("axes").innerHTML = axesHtml;
-        break;
-      }
-      if (!found) {
-        document.getElementById("status").innerText = "Connect a gamepad & press any button…";
-        document.getElementById("gamepad-info").innerHTML = "";
-        document.getElementById("buttons").innerHTML = "";
-        document.getElementById("axes").innerHTML = "";
       }
     }
 
-    // Update every 16ms (60fps)
-    setInterval(updateGamepadStatus, 16);
+    function copyDiagnostics() {
+      const gamepads = navigator.getGamepads();
+      let diagnostics = 'Gamepad Diagnostics Report\n';
+      diagnostics += `Generated: ${new Date().toLocaleString()}\n\n`;
+      
+      for (let gp of gamepads) {
+        if (gp) {
+          diagnostics += `Controller: ${gp.id}\n`;
+          diagnostics += `Index: ${gp.index}\n`;
+          diagnostics += `Buttons: ${gp.buttons.length}\n`;
+          diagnostics += `Axes: ${gp.axes.length}\n`;
+          diagnostics += `Connected: ${gp.connected}\n`;
+          diagnostics += `Timestamp: ${gp.timestamp}\n\n`;
+          
+          diagnostics += 'Button States:\n';
+          gp.buttons.forEach((btn, i) => {
+            diagnostics += `  Button ${i}: ${btn.pressed ? 'PRESSED' : 'released'} (value: ${btn.value.toFixed(3)})\n`;
+          });
+          
+          diagnostics += '\nAxis States:\n';
+          gp.axes.forEach((axis, i) => {
+            diagnostics += `  Axis ${i}: ${axis.toFixed(3)}\n`;
+          });
+        }
+      }
+      
+      navigator.clipboard.writeText(diagnostics).then(() => {
+        showToast('Diagnostics copied to clipboard!', 'success');
+      }).catch(() => {
+        // Fallback for browsers without clipboard API
+        const textArea = document.createElement('textarea');
+        textArea.value = diagnostics;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showToast('Diagnostics copied to clipboard!', 'success');
+      });
+    }
+
+    function updateCalibrationInfo() {
+      const info = document.getElementById('calibrationInfo');
+      if (calibration.timestamp) {
+        const date = new Date(calibration.timestamp);
+        info.innerHTML = `<i class="fas fa-check-circle" style="color: var(--success);"></i> 
+                          Calibrated on ${date.toLocaleDateString()} at ${date.toLocaleTimeString()}`;
+      } else {
+        info.innerHTML = `<i class="fas fa-info-circle"></i> 
+                          Center calibration helps compensate for stick drift. Press "Set Center Position" when sticks are at rest.`;
+      }
+    }
+
+    // Load saved calibration
+    function loadCalibration() {
+      const saved = localStorage.getItem('gamepadCalibration');
+      if (saved) {
+        try {
+          calibration = JSON.parse(saved);
+        } catch (e) {
+          console.warn('Failed to load calibration:', e);
+        }
+      }
+      updateCalibrationInfo();
+    }
+
+    // Main update function
+    function updateGamepadStatus() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let connected = false;
+      
+      for (let gp of gamepads) {
+        if (!gp) continue;
+        
+        connected = true;
+        
+        // Update status
+        document.getElementById('statusText').textContent = `Connected: ${gp.id}`;
+        document.getElementById('statusDot').className = 'status-dot connected';
+        document.getElementById('controllerInfo').textContent = 
+          `Index: ${gp.index} | Buttons: ${gp.buttons.length} | Axes: ${gp.axes.length}`;
+        
+        // Update button count
+        document.getElementById('buttonCount').textContent = gp.buttons.length;
+        document.getElementById('axisCount').textContent = gp.axes.length;
+        
+        // Update buttons grid
+        updateButtonGrid(gp);
+        
+        // Update analog sticks
+        updateAnalogSticks(gp);
+        
+        break; // Only show first connected gamepad
+      }
+      
+      if (!connected) {
+        document.getElementById('statusText').textContent = 'Connect a gamepad and press any button...';
+        document.getElementById('statusDot').className = 'status-dot';
+        document.getElementById('controllerInfo').textContent = 'No controller detected';
+        document.getElementById('buttonCount').textContent = '0';
+        document.getElementById('axisCount').textContent = '0';
+        clearDisplays();
+      }
+    }
+
+    function updateButtonGrid(gp) {
+      const grid = document.getElementById('buttonGrid');
+      grid.innerHTML = '';
+      
+      for (let i = 0; i < gp.buttons.length; i++) {
+        const btn = gp.buttons[i];
+        const buttonElement = document.createElement('div');
+        buttonElement.className = `button-item ${btn.pressed ? 'pressed' : ''}`;
+        buttonElement.innerHTML = `
+          <div class="button-index">${i}</div>
+          <div class="button-value">${btn.value.toFixed(2)}</div>
+        `;
+        
+        // Add special styling for common buttons
+        if (i === 0) buttonElement.style.background = btn.pressed ? 'linear-gradient(135deg, #ff5252 0%, #d32f2f 100%)' : '';
+        if (i === 1) buttonElement.style.background = btn.pressed ? 'linear-gradient(135deg, #ffb300 0%, #ff8f00 100%)' : '';
+        if (i === 2) buttonElement.style.background = btn.pressed ? 'linear-gradient(135deg, #00c853 0%, #00a844 100%)' : '';
+        if (i === 3) buttonElement.style.background = btn.pressed ? 'linear-gradient(135deg, #0066ff 0%, #0052d4 100%)' : '';
+        
+        grid.appendChild(buttonElement);
+      }
+      
+      // Fill empty slots for better grid layout
+      const emptySlots = 24 - gp.buttons.length;
+      for (let i = 0; i < emptySlots; i++) {
+        const emptyElement = document.createElement('div');
+        emptyElement.className = 'button-item';
+        emptyElement.style.opacity = '0.3';
+        emptyElement.innerHTML = '<div class="button-index">-</div>';
+        grid.appendChild(emptyElement);
+      }
+    }
+
+    function updateAnalogSticks(gp) {
+      const sticksGrid = document.getElementById('sticksGrid');
+      sticksGrid.innerHTML = '';
+      
+      // Group axes into pairs for sticks (assuming first 4 axes are for 2 sticks)
+      const stickPairs = [];
+      for (let i = 0; i < gp.axes.length; i += 2) {
+        if (i + 1 < gp.axes.length) {
+          stickPairs.push([i, i + 1]);
+        } else {
+          stickPairs.push([i]);
+        }
+      }
+      
+      stickPairs.forEach((pair, stickIndex) => {
+        const axis1 = calibration.axes[pair[0]] !== undefined ? 
+                     gp.axes[pair[0]] - calibration.axes[pair[0]] : gp.axes[pair[0]];
+        const axis2 = pair[1] !== undefined && calibration.axes[pair[1]] !== undefined ? 
+                     gp.axes[pair[1]] - calibration.axes[pair[1]] : 
+                     pair[1] !== undefined ? gp.axes[pair[1]] : 0;
+        
+        // Apply deadzone
+        const deadzone = calibration.deadzones[stickIndex] || 0.05;
+        const mag = Math.sqrt(axis1 * axis1 + axis2 * axis2);
+        const normalizedX = mag > deadzone ? axis1 : 0;
+        const normalizedY = mag > deadzone ? axis2 : 0;
+        
+        // Convert to display coordinates (0-100%)
+        const displayX = ((normalizedX + 1) / 2) * 100;
+        const displayY = ((normalizedY + 1) / 2) * 100;
+        
+        const stickElement = document.createElement('div');
+        stickElement.className = 'stick-display';
+        stickElement.innerHTML = `
+          <div class="stick-grid">
+            <div class="stick-grid-line horizontal"></div>
+            <div class="stick-grid-line vertical"></div>
+            <div class="stick-center"></div>
+            <div class="stick-indicator" style="left: ${displayX}%; top: ${displayY}%"></div>
+          </div>
+          <div class="stick-label">Stick ${stickIndex + 1}</div>
+          <div class="stick-values">
+            <div class="stick-value">X: ${axis1.toFixed(3)}</div>
+            <div class="stick-value">Y: ${axis2.toFixed(3)}</div>
+          </div>
+        `;
+        
+        sticksGrid.appendChild(stickElement);
+      });
+    }
+
+    function clearDisplays() {
+      document.getElementById('buttonGrid').innerHTML = '';
+      document.getElementById('sticksGrid').innerHTML = '';
+    }
+
+    // Initialize and start update loop
+    document.addEventListener('DOMContentLoaded', () => {
+      initBackground();
+      loadCalibration();
+      
+      // Initial update
+      updateGamepadStatus();
+      
+      // Update at 60fps
+      setInterval(updateGamepadStatus, 16);
+      
+      // Add connection event listeners
+      window.addEventListener('gamepadconnected', (e) => {
+        showToast(`Gamepad connected: ${e.gamepad.id}`, 'success');
+        updateGamepadStatus();
+      });
+      
+      window.addEventListener('gamepaddisconnected', (e) => {
+        showToast(`Gamepad disconnected: ${e.gamepad.id}`, 'warning');
+        updateGamepadStatus();
+      });
+    });
   </script>
 </body>
 </html>
