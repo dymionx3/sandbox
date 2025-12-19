@@ -12,80 +12,83 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap');
     
     * { 
       font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; 
     }
     
     .gradient-bg { 
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%); 
     }
     
     .gradient-text {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
       -webkit-background-clip: text; 
       -webkit-text-fill-color: transparent; 
       background-clip: text;
     }
     
     .hover-scale { 
-      transition: transform .25s cubic-bezier(.4,0,.2,1); 
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease; 
     }
     
     .hover-scale:hover { 
-      transform: translateY(-2px) scale(1.02); 
+      transform: translateY(-4px); 
+      box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15);
     }
     
     .floating { 
-      animation: floating 6s ease-in-out infinite; 
+      animation: floating 8s ease-in-out infinite; 
     }
     
     @keyframes floating { 
-      0% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(180deg); }
-      100% { transform: translateY(0) rotate(360deg); }
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-30px) rotate(180deg); }
+      100% { transform: translateY(0px) rotate(360deg); }
     }
     
     .text-editor { 
       min-height: 200px; 
-      border: 2px solid #e5e7eb; 
-      border-radius: .75rem; 
-      padding: 1.25rem; 
+      border: 2px solid #e2e8f0; 
+      border-radius: 1rem; 
+      padding: 1.5rem; 
       outline: none;
+      background: white;
     }
     
     .text-editor:focus { 
-      border-color: #667eea; 
-      box-shadow: 0 0 0 4px rgba(102,126,234,.1);
+      border-color: #6366f1; 
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
     }
     
     .file-drop-zone { 
-      transition: all .3s ease; 
+      transition: all 0.3s ease; 
       border: 3px dashed #cbd5e1;
-      background: rgba(249, 250, 251, 0.5);
+      background: rgba(249, 250, 251, 0.6);
+      border-radius: 1.5rem;
     }
     
     .file-drop-zone.dragover { 
-      border-color: #667eea; 
-      background-color: rgba(102,126,234,.05); 
+      border-color: #6366f1; 
+      background-color: rgba(99, 102, 241, 0.05); 
     }
     
     .slide-in { 
-      animation: slideIn .4s ease-out; 
+      animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
     }
     
     @keyframes slideIn { 
-      from { transform: translateY(20px); opacity: 0; }
+      from { transform: translateY(30px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
     
     .loading-spinner {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #667eea;
+      border: 4px solid rgba(99, 102, 241, 0.1);
+      border-top: 4px solid #6366f1;
       border-radius: 50%;
-      width: 24px;
-      height: 24px;
+      width: 40px;
+      height: 40px;
       animation: spin 1s linear infinite;
     }
     
@@ -97,183 +100,368 @@
     .signature-canvas {
       touch-action: none;
       cursor: crosshair;
+      background: white;
+    }
+    
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .tool-card {
+      transition: all 0.3s ease;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .tool-card:hover {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.9) 100%);
+    }
+    
+    .modal-gradient {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    }
+    
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+      70% { box-shadow: 0 0 0 20px rgba(99, 102, 241, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+    }
+    
+    .gradient-border {
+      position: relative;
+      background: white;
+      border-radius: 1.5rem;
+    }
+    
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef);
+      border-radius: 1.5rem;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .gradient-border:hover::before {
+      opacity: 1;
+    }
+    
+    .glow {
+      box-shadow: 0 10px 40px rgba(99, 102, 241, 0.15);
+    }
+    
+    .page-heading {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
     }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
+<body class="bg-gradient-to-br from-gray-50 to-indigo-50 min-h-screen flex flex-col">
   <!-- Animated Background -->
   <div aria-hidden="true" class="fixed inset-0 overflow-hidden pointer-events-none">
-    <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 floating"></div>
-    <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 floating" style="animation-delay: 2s"></div>
+    <div class="absolute -top-40 -right-40 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 floating"></div>
+    <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 floating" style="animation-delay: 2s"></div>
+    <div class="absolute top-1/2 left-1/3 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-15 floating" style="animation-delay: 4s"></div>
   </div>
 
   <!-- Header -->
-  <header class="relative z-10 bg-white/80 backdrop-blur-sm shadow-lg" role="banner">
-    <div class="max-w-7xl mx-auto px-4 py-4">
-      <div class="flex items-center justify-center">
-        <div class="flex items-center gap-3" aria-label="App brand">
-          <div class="w-12 h-12 gradient-bg rounded-xl grid place-items-center shadow-md" aria-hidden="true">
-            <i class="fas fa-file-pdf text-white text-2xl"></i>
+  <header class="relative z-10 glass-effect shadow-lg mb-8" role="banner">
+    <div class="max-w-7xl mx-auto px-6 py-5">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4" aria-label="App brand">
+          <div class="w-14 h-14 gradient-bg rounded-2xl grid place-items-center shadow-lg glow" aria-hidden="true">
+            <i class="fas fa-file-pdf text-white text-3xl"></i>
           </div>
-          <div class="text-center">
-            <h1 class="text-2xl font-bold gradient-text">PDF Studio</h1>
-            <p class="text-sm text-gray-600">by M.V. Electronix LLC</p>
+          <div>
+            <h1 class="page-heading text-3xl font-bold gradient-text">PDF Studio</h1>
+            <p class="text-sm text-gray-600 mt-1">by <span class="font-semibold text-indigo-600">M.V. Electronix LLC</span></p>
           </div>
+        </div>
+        <div class="hidden md:flex items-center gap-2 bg-white/80 px-4 py-2 rounded-full">
+          <i class="fas fa-shield-alt text-indigo-500"></i>
+          <span class="text-sm font-medium text-gray-700">100% Client-Side Processing</span>
         </div>
       </div>
     </div>
   </header>
 
   <!-- Hero -->
-  <section class="relative z-10 py-16 md:py-20 flex-grow">
-    <div class="max-w-5xl mx-auto px-4 text-center">
-      <h2 class="text-5xl md:text-6xl font-extrabold mb-6"><span class="gradient-text">Transform Your PDFs</span></h2>
-      <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">Powerful PDF tools by M.V. Electronix LLC. Create, edit, fill, merge, split, and more — all client‑side, private by default.</p>
+  <section class="relative z-10 py-12 md:py-16 flex-grow">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <div class="inline-block mb-6 px-4 py-2 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-full">
+        <span class="text-sm font-semibold text-indigo-600">Professional PDF Tools</span>
+      </div>
+      <h2 class="page-heading text-5xl md:text-7xl mb-8 leading-tight">
+        <span class="gradient-text">Transform Your</span><br>
+        <span class="text-gray-800">PDF Workflow</span>
+      </h2>
+      <p class="text-xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">Powerful, privacy-focused PDF tools by M.V. Electronix LLC. Create, edit, merge, sign, and more — all processed in your browser.</p>
       <button onclick="scrollToTools()" 
-              class="gradient-bg text-white px-8 py-4 rounded-full font-semibold hover-scale shadow-lg 
-                     focus:outline-none focus:ring-4 focus:ring-purple-300 flex items-center justify-center gap-2 mx-auto">
-        Get Started <i class="fas fa-arrow-down"></i>
+              class="gradient-bg text-white px-10 py-5 rounded-2xl font-semibold hover-scale shadow-2xl pulse
+                     focus:outline-none focus:ring-4 focus:ring-indigo-300 flex items-center justify-center gap-3 mx-auto text-lg">
+        Explore Tools <i class="fas fa-arrow-down animate-bounce"></i>
       </button>
     </div>
   </section>
 
   <!-- Tools -->
-  <section id="tools" class="relative z-10 py-12 md:py-16">
-    <div class="max-w-7xl mx-auto px-4">
-      <h3 class="text-3xl font-bold text-center mb-10 gradient-text">PDF Tools by M.V. Electronix LLC</h3>
+  <section id="tools" class="relative z-10 py-12 md:py-20 px-6">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+        <h3 class="page-heading text-4xl md:text-5xl mb-6 gradient-text">Powerful PDF Toolkit</h3>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">Everything you need to work with PDFs efficiently and securely</p>
+      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- Tool Cards -->
-        <button class="tool-card bg-white rounded-2xl shadow-lg p-6 hover-scale text-left border border-gray-100"
-                onclick="openTool('create')">
-          <div class="w-16 h-16 gradient-bg rounded-xl grid place-items-center mb-4">
-            <i class="fas fa-plus-circle text-white text-2xl"></i>
+        <div class="tool-card rounded-3xl p-8 hover-scale glow gradient-border cursor-pointer" onclick="openTool('create')">
+          <div class="w-20 h-20 gradient-bg rounded-2xl grid place-items-center mb-6 shadow-lg mx-auto">
+            <i class="fas fa-plus-circle text-white text-3xl"></i>
           </div>
-          <h4 class="text-xl font-bold mb-2 text-gray-800">Create PDF</h4>
-          <p class="text-gray-600">Create a PDF from text, images, or a blank document.</p>
-        </button>
+          <h4 class="text-2xl font-bold mb-3 text-gray-800 text-center">Create PDF</h4>
+          <p class="text-gray-600 text-center mb-6">Create PDFs from text, images, or blank documents with custom formatting</p>
+          <div class="flex justify-center">
+            <span class="inline-flex items-center gap-2 text-indigo-600 font-medium">
+              Get Started <i class="fas fa-arrow-right"></i>
+            </span>
+          </div>
+        </div>
 
-        <button class="tool-card bg-white rounded-2xl shadow-lg p-6 hover-scale text-left border border-gray-100"
-                onclick="openTool('fill')">
-          <div class="w-16 h-16 gradient-bg rounded-xl grid place-items-center mb-4">
-            <i class="fas fa-signature text-white text-2xl"></i>
+        <div class="tool-card rounded-3xl p-8 hover-scale glow gradient-border cursor-pointer" onclick="openTool('fill')">
+          <div class="w-20 h-20 gradient-bg rounded-2xl grid place-items-center mb-6 shadow-lg mx-auto">
+            <i class="fas fa-signature text-white text-3xl"></i>
           </div>
-          <h4 class="text-xl font-bold mb-2 text-gray-800">Fill & Sign</h4>
-          <p class="text-gray-600">Add text boxes and a drawn signature.</p>
-        </button>
+          <h4 class="text-2xl font-bold mb-3 text-gray-800 text-center">Fill & Sign</h4>
+          <p class="text-gray-600 text-center mb-6">Add text fields and digital signatures to your documents</p>
+          <div class="flex justify-center">
+            <span class="inline-flex items-center gap-2 text-indigo-600 font-medium">
+              Get Started <i class="fas fa-arrow-right"></i>
+            </span>
+          </div>
+        </div>
 
-        <button class="tool-card bg-white rounded-2xl shadow-lg p-6 hover-scale text-left border border-gray-100"
-                onclick="openTool('edit')">
-          <div class="w-16 h-16 gradient-bg rounded-xl grid place-items-center mb-4">
-            <i class="fas fa-pencil-alt text-white text-2xl"></i>
+        <div class="tool-card rounded-3xl p-8 hover-scale glow gradient-border cursor-pointer" onclick="openTool('edit')">
+          <div class="w-20 h-20 gradient-bg rounded-2xl grid place-items-center mb-6 shadow-lg mx-auto">
+            <i class="fas fa-pencil-alt text-white text-3xl"></i>
           </div>
-          <h4 class="text-xl font-bold mb-2 text-gray-800">Edit PDF</h4>
-          <p class="text-gray-600">Add annotations and drawings to PDF.</p>
-        </button>
+          <h4 class="text-2xl font-bold mb-3 text-gray-800 text-center">Edit PDF</h4>
+          <p class="text-gray-600 text-center mb-6">Add annotations, drawings, and markups to your PDFs</p>
+          <div class="flex justify-center">
+            <span class="inline-flex items-center gap-2 text-indigo-600 font-medium">
+              Get Started <i class="fas fa-arrow-right"></i>
+            </span>
+          </div>
+        </div>
 
-        <button class="tool-card bg-white rounded-2xl shadow-lg p-6 hover-scale text-left border border-gray-100"
-                onclick="openTool('merge')">
-          <div class="w-16 h-16 gradient-bg rounded-xl grid place-items-center mb-4">
-            <i class="fas fa-layer-group text-white text-2xl"></i>
+        <div class="tool-card rounded-3xl p-8 hover-scale glow gradient-border cursor-pointer" onclick="openTool('merge')">
+          <div class="w-20 h-20 gradient-bg rounded-2xl grid place-items-center mb-6 shadow-lg mx-auto">
+            <i class="fas fa-layer-group text-white text-3xl"></i>
           </div>
-          <h4 class="text-xl font-bold mb-2 text-gray-800">Merge PDFs</h4>
-          <p class="text-gray-600">Combine PDFs without losing text quality.</p>
-        </button>
+          <h4 class="text-2xl font-bold mb-3 text-gray-800 text-center">Merge PDFs</h4>
+          <p class="text-gray-600 text-center mb-6">Combine multiple PDFs into one document with drag-and-drop reordering</p>
+          <div class="flex justify-center">
+            <span class="inline-flex items-center gap-2 text-indigo-600 font-medium">
+              Get Started <i class="fas fa-arrow-right"></i>
+            </span>
+          </div>
+        </div>
 
-        <button class="tool-card bg-white rounded-2xl shadow-lg p-6 hover-scale text-left border border-gray-100"
-                onclick="openTool('split')">
-          <div class="w-16 h-16 gradient-bg rounded-xl grid place-items-center mb-4">
-            <i class="fas fa-cut text-white text-2xl"></i>
+        <div class="tool-card rounded-3xl p-8 hover-scale glow gradient-border cursor-pointer" onclick="openTool('split')">
+          <div class="w-20 h-20 gradient-bg rounded-2xl grid place-items-center mb-6 shadow-lg mx-auto">
+            <i class="fas fa-cut text-white text-3xl"></i>
           </div>
-          <h4 class="text-xl font-bold mb-2 text-gray-800">Split PDF</h4>
-          <p class="text-gray-600">Extract page ranges to new files.</p>
-        </button>
+          <h4 class="text-2xl font-bold mb-3 text-gray-800 text-center">Split PDF</h4>
+          <p class="text-gray-600 text-center mb-6">Extract specific pages or split into individual pages</p>
+          <div class="flex justify-center">
+            <span class="inline-flex items-center gap-2 text-indigo-600 font-medium">
+              Get Started <i class="fas fa-arrow-right"></i>
+            </span>
+          </div>
+        </div>
 
-        <button class="tool-card bg-white rounded-2xl shadow-lg p-6 hover-scale text-left border border-gray-100"
-                onclick="openTool('compress')">
-          <div class="w-16 h-16 gradient-bg rounded-xl grid place-items-center mb-4">
-            <i class="fas fa-compress text-white text-2xl"></i>
+        <div class="tool-card rounded-3xl p-8 hover-scale glow gradient-border cursor-pointer" onclick="openTool('compress')">
+          <div class="w-20 h-20 gradient-bg rounded-2xl grid place-items-center mb-6 shadow-lg mx-auto">
+            <i class="fas fa-compress text-white text-3xl"></i>
           </div>
-          <h4 class="text-xl font-bold mb-2 text-gray-800">Compress PDF</h4>
-          <p class="text-gray-600">Reduce PDF file size.</p>
-        </button>
+          <h4 class="text-2xl font-bold mb-3 text-gray-800 text-center">Compress PDF</h4>
+          <p class="text-gray-600 text-center mb-6">Reduce file size while maintaining quality</p>
+          <div class="flex justify-center">
+            <span class="inline-flex items-center gap-2 text-indigo-600 font-medium">
+              Get Started <i class="fas fa-arrow-right"></i>
+            </span>
+          </div>
+        </div>
 
-        <button class="tool-card bg-white rounded-2xl shadow-lg p-6 hover-scale text-left border border-gray-100"
-                onclick="openTool('convert')">
-          <div class="w-16 h-16 gradient-bg rounded-xl grid place-items-center mb-4">
-            <i class="fas fa-file-arrow-down text-white text-2xl"></i>
+        <div class="tool-card rounded-3xl p-8 hover-scale glow gradient-border cursor-pointer" onclick="openTool('convert')">
+          <div class="w-20 h-20 gradient-bg rounded-2xl grid place-items-center mb-6 shadow-lg mx-auto">
+            <i class="fas fa-file-arrow-down text-white text-3xl"></i>
           </div>
-          <h4 class="text-xl font-bold mb-2 text-gray-800">Convert to PDF</h4>
-          <p class="text-gray-600">Convert images (JPG/PNG) & text files.</p>
-        </button>
+          <h4 class="text-2xl font-bold mb-3 text-gray-800 text-center">Convert to PDF</h4>
+          <p class="text-gray-600 text-center mb-6">Convert images and text files to PDF format</p>
+          <div class="flex justify-center">
+            <span class="inline-flex items-center gap-2 text-indigo-600 font-medium">
+              Get Started <i class="fas fa-arrow-right"></i>
+            </span>
+          </div>
+        </div>
 
-        <button class="tool-card bg-white rounded-2xl shadow-lg p-6 hover-scale text-left border border-gray-100"
-                onclick="openTool('watermark')">
-          <div class="w-16 h-16 gradient-bg rounded-xl grid place-items-center mb-4">
-            <i class="fas fa-stamp text-white text-2xl"></i>
+        <div class="tool-card rounded-3xl p-8 hover-scale glow gradient-border cursor-pointer" onclick="openTool('watermark')">
+          <div class="w-20 h-20 gradient-bg rounded-2xl grid place-items-center mb-6 shadow-lg mx-auto">
+            <i class="fas fa-stamp text-white text-3xl"></i>
           </div>
-          <h4 class="text-xl font-bold mb-2 text-gray-800">Add Watermark</h4>
-          <p class="text-gray-600">Text watermark with color, opacity, angle.</p>
-        </button>
+          <h4 class="text-2xl font-bold mb-3 text-gray-800 text-center">Add Watermark</h4>
+          <p class="text-gray-600 text-center mb-6">Custom text watermarks with full control over appearance</p>
+          <div class="flex justify-center">
+            <span class="inline-flex items-center gap-2 text-indigo-600 font-medium">
+              Get Started <i class="fas fa-arrow-right"></i>
+            </span>
+          </div>
+        </div>
 
-        <button class="tool-card bg-white rounded-2xl shadow-lg p-6 hover-scale text-left border border-gray-100"
-                onclick="openTool('rotate')">
-          <div class="w-16 h-16 gradient-bg rounded-xl grid place-items-center mb-4">
-            <i class="fas fa-rotate-right text-white text-2xl"></i>
+        <div class="tool-card rounded-3xl p-8 hover-scale glow gradient-border cursor-pointer" onclick="openTool('rotate')">
+          <div class="w-20 h-20 gradient-bg rounded-2xl grid place-items-center mb-6 shadow-lg mx-auto">
+            <i class="fas fa-rotate-right text-white text-3xl"></i>
           </div>
-          <h4 class="text-xl font-bold mb-2 text-gray-800">Rotate Pages</h4>
-          <p class="text-gray-600">Rotate all or selected pages.</p>
-        </button>
+          <h4 class="text-2xl font-bold mb-3 text-gray-800 text-center">Rotate Pages</h4>
+          <p class="text-gray-600 text-center mb-6">Rotate all or selected pages in any direction</p>
+          <div class="flex justify-center">
+            <span class="inline-flex items-center gap-2 text-indigo-600 font-medium">
+              Get Started <i class="fas fa-arrow-right"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Banner -->
+  <section class="relative z-10 py-16 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="glass-effect rounded-3xl p-12 text-center">
+        <h4 class="page-heading text-3xl mb-8 gradient-text">Why Choose PDF Studio?</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="space-y-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl grid place-items-center mx-auto">
+              <i class="fas fa-lock text-2xl text-indigo-600"></i>
+            </div>
+            <h5 class="text-xl font-bold text-gray-800">Privacy First</h5>
+            <p class="text-gray-600">All processing happens in your browser. Your files never leave your device.</p>
+          </div>
+          <div class="space-y-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl grid place-items-center mx-auto">
+              <i class="fas fa-bolt text-2xl text-indigo-600"></i>
+            </div>
+            <h5 class="text-xl font-bold text-gray-800">Fast Processing</h5>
+            <p class="text-gray-600">Optimized tools that work quickly even with large documents.</p>
+          </div>
+          <div class="space-y-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl grid place-items-center mx-auto">
+              <i class="fas fa-infinity text-2xl text-indigo-600"></i>
+            </div>
+            <h5 class="text-xl font-bold text-gray-800">No Limits</h5>
+            <p class="text-gray-600">Unlimited usage. No subscriptions, no watermarks, no restrictions.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="relative z-10 bg-gray-900 text-white py-8 mt-auto">
-    <div class="max-w-6xl mx-auto px-4 text-center">
-      <div class="mb-4">
-        <h3 class="text-2xl font-bold gradient-text">M.V. Electronix LLC</h3>
-        <p class="text-gray-400 mt-2">Innovative PDF Solutions</p>
+  <footer class="relative z-10 bg-gray-900 text-white py-12 mt-20">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h3 class="text-2xl font-bold mb-4 gradient-text">PDF Studio</h3>
+          <p class="text-gray-400 mb-4">Professional PDF tools by M.V. Electronix LLC. Innovative solutions for modern workflows.</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-gray-800 rounded-lg grid place-items-center">
+              <i class="fas fa-shield-alt text-indigo-400"></i>
+            </div>
+            <span class="text-sm text-gray-300">100% Client-Side Processing</span>
+          </div>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4 text-white">Quick Links</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">About Us</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4 text-white">Connect With Us</h4>
+          <div class="flex gap-4 mb-6">
+            <a href="#" class="w-12 h-12 bg-gray-800 hover:bg-indigo-600 rounded-xl grid place-items-center transition">
+              <i class="fab fa-twitter text-xl"></i>
+            </a>
+            <a href="#" class="w-12 h-12 bg-gray-800 hover:bg-indigo-600 rounded-xl grid place-items-center transition">
+              <i class="fab fa-linkedin text-xl"></i>
+            </a>
+            <a href="#" class="w-12 h-12 bg-gray-800 hover:bg-indigo-600 rounded-xl grid place-items-center transition">
+              <i class="fab fa-github text-xl"></i>
+            </a>
+          </div>
+          <div class="bg-gray-800/50 rounded-xl p-4">
+            <p class="text-sm text-gray-400">Need enterprise solutions?</p>
+            <a href="#" class="text-indigo-400 hover:text-indigo-300 font-medium">Contact our sales team →</a>
+          </div>
+        </div>
       </div>
-      <div class="flex justify-center gap-6 mb-4">
-        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter text-xl"></i></a>
-        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-linkedin text-xl"></i></a>
-        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-github text-xl"></i></a>
+      <div class="pt-8 border-t border-gray-800 text-center">
+        <p class="text-gray-500">© <span id="year"></span> M.V. Electronix LLC. All rights reserved.</p>
+        <p class="text-gray-600 text-sm mt-2">Made with <i class="fas fa-heart text-red-400"></i> for the developer community</p>
       </div>
-      <p class="text-gray-500 text-sm">© <span id="year"></span> M.V. Electronix LLC. All rights reserved.</p>
     </div>
   </footer>
 
   <!-- Modal -->
-  <div id="toolModal" class="fixed inset-0 bg-black/50 z-50 hidden" role="dialog">
-    <div class="flex items-center justify-center min-h-screen p-4">
-      <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden slide-in">
-        <div class="gradient-bg p-6 text-white">
+  <div id="toolModal" class="fixed inset-0 bg-black/60 z-50 hidden backdrop-blur-sm" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen p-6">
+      <div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden slide-in relative">
+        <div class="modal-gradient p-8 text-white">
           <div class="flex items-center justify-between">
             <div>
-              <h3 id="toolTitle" class="text-2xl font-bold">Tool</h3>
-              <p class="text-sm/relaxed opacity-90">Powered by M.V. Electronix LLC</p>
+              <h3 id="toolTitle" class="text-3xl font-bold">Tool</h3>
+              <p class="text-sm/relaxed opacity-90 mt-2">Powered by M.V. Electronix LLC</p>
             </div>
-            <button onclick="closeTool()" class="text-white hover:text-gray-200 focus:outline-none p-2">
+            <button onclick="closeTool()" class="text-white hover:text-gray-200 focus:outline-none p-3 rounded-full hover:bg-white/10 transition">
               <i class="fas fa-times text-2xl"></i>
             </button>
           </div>
         </div>
-        <div class="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+        <div class="p-8 overflow-y-auto max-h-[calc(90vh-120px)]">
           <div id="toolContent"></div>
         </div>
+        <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-full -translate-y-16 translate-x-16"></div>
+        <div class="absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-tr from-pink-500/10 to-purple-500/10 rounded-full translate-y-20 -translate-x-20"></div>
       </div>
     </div>
   </div>
 
   <!-- Notifications -->
-  <div id="notificationContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+  <div id="notificationContainer" class="fixed top-6 right-6 z-50 space-y-4"></div>
 
   <!-- Loading Overlay -->
-  <div id="loadingOverlay" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center">
-    <div class="bg-white rounded-xl p-8 flex flex-col items-center gap-4">
+  <div id="loadingOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-2xl p-10 flex flex-col items-center gap-6 shadow-2xl">
       <div class="loading-spinner"></div>
-      <p class="text-gray-700 font-medium">Processing...</p>
+      <div class="text-center">
+        <p class="text-xl font-semibold text-gray-800">Processing...</p>
+        <p class="text-gray-600 mt-2">Your file is being processed securely in your browser</p>
+      </div>
     </div>
   </div>
 
@@ -305,16 +493,16 @@
     function notify(message, type = 'info') {
       const container = $('#notificationContainer');
       const colors = {
-        success: 'bg-green-600',
-        error: 'bg-red-600',
-        info: 'bg-blue-600'
+        success: 'bg-gradient-to-r from-green-500 to-emerald-500',
+        error: 'bg-gradient-to-r from-red-500 to-rose-500',
+        info: 'bg-gradient-to-r from-blue-500 to-indigo-500'
       };
       
       const n = document.createElement('div');
-      n.className = `${colors[type]} text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 max-w-sm`;
+      n.className = `${colors[type]} text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 max-w-sm slide-in`;
       n.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-        <span class="flex-1">${message}</span>
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} text-xl"></i>
+        <span class="flex-1 font-medium">${message}</span>
         <button onclick="this.parentElement.remove()" class="text-white/70 hover:text-white">
           <i class="fas fa-times"></i>
         </button>
@@ -394,82 +582,107 @@
     // ========== CREATE PDF TOOL ==========
     function getCreateContent() {
       return `
-        <div class="space-y-6">
-          <div class="bg-gray-50 p-4 rounded-lg">
-            <h4 class="font-semibold mb-3">Create PDF from:</h4>
-            <div class="space-y-3">
-              <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-100">
-                <input type="radio" name="createType" value="text" checked class="text-purple-600">
-                <div><p class="font-medium">Text Document</p><p class="text-sm text-gray-500">Write or paste formatted text</p></div>
+        <div class="space-y-8">
+          <div class="bg-gradient-to-br from-gray-50 to-indigo-50 p-6 rounded-2xl border border-gray-100">
+            <h4 class="font-bold text-lg mb-4 text-gray-800">Create PDF from:</h4>
+            <div class="space-y-4">
+              <label class="flex items-center gap-4 p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:bg-white hover:border-indigo-100 transition">
+                <input type="radio" name="createType" value="text" checked class="text-indigo-600 h-5 w-5">
+                <div>
+                  <p class="font-semibold text-gray-800">Text Document</p>
+                  <p class="text-sm text-gray-500 mt-1">Write or paste formatted text</p>
+                </div>
               </label>
-              <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-100">
-                <input type="radio" name="createType" value="images" class="text-purple-600">
-                <div><p class="font-medium">Images</p><p class="text-sm text-gray-500">Convert JPG/PNG to PDF pages</p></div>
+              <label class="flex items-center gap-4 p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:bg-white hover:border-indigo-100 transition">
+                <input type="radio" name="createType" value="images" class="text-indigo-600 h-5 w-5">
+                <div>
+                  <p class="font-semibold text-gray-800">Images</p>
+                  <p class="text-sm text-gray-500 mt-1">Convert JPG/PNG to PDF pages</p>
+                </div>
               </label>
-              <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-100">
-                <input type="radio" name="createType" value="blank" class="text-purple-600">
-                <div><p class="font-medium">Blank Document</p><p class="text-sm text-gray-500">Create empty pages</p></div>
+              <label class="flex items-center gap-4 p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:bg-white hover:border-indigo-100 transition">
+                <input type="radio" name="createType" value="blank" class="text-indigo-600 h-5 w-5">
+                <div>
+                  <p class="font-semibold text-gray-800">Blank Document</p>
+                  <p class="text-sm text-gray-500 mt-1">Create empty pages</p>
+                </div>
               </label>
             </div>
           </div>
           
-          <div id="textCreate" class="space-y-4">
-            <label class="block text-sm font-medium">Document Title
+          <div id="textCreate" class="space-y-6">
+            <label class="block">
+              <span class="text-sm font-medium text-gray-700 mb-2 block">Document Title</span>
               <input type="text" id="docTitle" placeholder="Enter document title" 
-                     class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-500" />
+                     class="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" />
             </label>
-            <label class="block text-sm font-medium">Content
+            <label class="block">
+              <span class="text-sm font-medium text-gray-700 mb-2 block">Content</span>
               <div contenteditable="true" id="textContent" class="text-editor" 
                    placeholder="Start typing your content here..."></div>
             </label>
-            <div class="grid grid-cols-2 gap-4">
-              <label class="block text-sm font-medium">Font Size
-                <select id="fontSizeSelect" class="mt-1 w-full px-4 py-2 border rounded-lg">
-                  <option value="12">12px</option><option value="14" selected>14px</option>
-                  <option value="16">16px</option><option value="18">18px</option>
+            <div class="grid grid-cols-2 gap-6">
+              <label class="block">
+                <span class="text-sm font-medium text-gray-700 mb-2 block">Font Size</span>
+                <select id="fontSizeSelect" class="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200">
+                  <option value="12">12px</option>
+                  <option value="14" selected>14px</option>
+                  <option value="16">16px</option>
+                  <option value="18">18px</option>
+                  <option value="20">20px</option>
                 </select>
               </label>
-              <label class="block text-sm font-medium">Page Size
-                <select id="pageSize" class="mt-1 w-full px-4 py-2 border rounded-lg">
-                  <option value="a4">A4</option><option value="letter">Letter</option>
+              <label class="block">
+                <span class="text-sm font-medium text-gray-700 mb-2 block">Page Size</span>
+                <select id="pageSize" class="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200">
+                  <option value="a4">A4</option>
+                  <option value="letter">Letter</option>
+                  <option value="legal">Legal</option>
                 </select>
               </label>
             </div>
           </div>
           
-          <div id="imageCreate" class="hidden space-y-4">
-            <div class="file-drop-zone p-8 rounded-lg text-center" id="imageDrop">
-              <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
-              <p class="text-lg text-gray-600 mb-2">Drag & drop images here</p>
+          <div id="imageCreate" class="hidden space-y-6">
+            <div class="file-drop-zone p-10 rounded-2xl text-center" id="imageDrop">
+              <i class="fas fa-cloud-upload-alt text-6xl text-gray-300 mb-6"></i>
+              <p class="text-lg font-medium text-gray-700 mb-2">Drag & drop images here</p>
+              <p class="text-sm text-gray-500 mb-6">Supports JPG, PNG, GIF formats</p>
               <input type="file" id="imageInput" multiple accept="image/*" class="hidden" />
               <button onclick="document.getElementById('imageInput').click()" 
-                      class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Images</button>
+                      class="gradient-bg text-white px-8 py-3 rounded-xl hover-scale font-semibold shadow-lg">Browse Images</button>
             </div>
-            <div id="imageList" class="space-y-2"></div>
+            <div id="imageList" class="space-y-3"></div>
           </div>
           
-          <div id="blankCreate" class="hidden space-y-4">
-            <div class="grid grid-cols-3 gap-4">
-              <label class="block text-sm font-medium">Page Size
-                <select id="blankPageSize" class="mt-1 w-full px-4 py-2 border rounded-lg">
-                  <option value="a4">A4</option><option value="letter">Letter</option>
+          <div id="blankCreate" class="hidden space-y-6">
+            <div class="grid grid-cols-3 gap-6">
+              <label class="block">
+                <span class="text-sm font-medium text-gray-700 mb-2 block">Page Size</span>
+                <select id="blankPageSize" class="w-full px-5 py-3 border-2 border-gray-200 rounded-xl">
+                  <option value="a4">A4</option>
+                  <option value="letter">Letter</option>
+                  <option value="legal">Legal</option>
                 </select>
               </label>
-              <label class="block text-sm font-medium">Pages
+              <label class="block">
+                <span class="text-sm font-medium text-gray-700 mb-2 block">Pages</span>
                 <input type="number" id="pageCount" min="1" value="1" 
-                       class="mt-1 w-full px-4 py-2 border rounded-lg" />
+                       class="w-full px-5 py-3 border-2 border-gray-200 rounded-xl" />
               </label>
-              <label class="block text-sm font-medium">Orientation
-                <select id="orientation" class="mt-1 w-full px-4 py-2 border rounded-lg">
-                  <option value="portrait">Portrait</option><option value="landscape">Landscape</option>
+              <label class="block">
+                <span class="text-sm font-medium text-gray-700 mb-2 block">Orientation</span>
+                <select id="orientation" class="w-full px-5 py-3 border-2 border-gray-200 rounded-xl">
+                  <option value="portrait">Portrait</option>
+                  <option value="landscape">Landscape</option>
                 </select>
               </label>
             </div>
           </div>
           
           <button onclick="handleCreatePDF()" 
-                  class="gradient-bg text-white px-6 py-3 rounded-lg hover-scale w-full font-semibold">
-            Create PDF
+                  class="gradient-bg text-white px-8 py-4 rounded-xl hover-scale w-full font-semibold text-lg shadow-lg mt-8">
+            <i class="fas fa-file-pdf mr-3"></i> Create PDF
           </button>
         </div>
       `;
@@ -544,17 +757,17 @@
           uploadedImages.push(e.target.result);
           
           const div = document.createElement('div');
-          div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+          div.className = 'flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100';
           div.innerHTML = `
-            <div class="flex items-center gap-3">
-              <img src="${e.target.result}" class="w-12 h-12 object-cover rounded" alt="Preview">
+            <div class="flex items-center gap-4">
+              <img src="${e.target.result}" class="w-16 h-16 object-cover rounded-lg" alt="Preview">
               <div>
-                <p class="font-medium">${file.name}</p>
+                <p class="font-semibold text-gray-800">${file.name}</p>
                 <p class="text-sm text-gray-500">${formatFileSize(file.size)}</p>
               </div>
             </div>
-            <button onclick="removeImage(${index})" class="text-red-500 hover:text-red-700">
-              <i class="fas fa-times"></i>
+            <button onclick="removeImage(${index})" class="text-red-500 hover:text-red-700 p-2">
+              <i class="fas fa-times text-lg"></i>
             </button>
           `;
           
@@ -571,12 +784,12 @@
       
       uploadedImages.forEach((src, idx) => {
         const div = document.createElement('div');
-        div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+        div.className = 'flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100';
         div.innerHTML = `
-          <div class="flex items-center gap-3">
-            <img src="${src}" class="w-12 h-12 object-cover rounded" alt="Preview">
+          <div class="flex items-center gap-4">
+            <img src="${src}" class="w-16 h-16 object-cover rounded-lg" alt="Preview">
             <div>
-              <p class="font-medium">Image ${idx + 1}</p>
+              <p class="font-semibold text-gray-800">Image ${idx + 1}</p>
             </div>
           </div>
         `;
@@ -684,45 +897,56 @@
     // ========== FILL & SIGN TOOL ==========
     function getFillContent() {
       return `
-        <div class="space-y-6">
-          <div class="file-drop-zone p-8 rounded-lg text-center" id="dropZone">
-            <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
-            <p class="text-lg text-gray-600 mb-2">Drag & drop a PDF</p>
+        <div class="space-y-8">
+          <div class="file-drop-zone p-10 rounded-2xl text-center" id="dropZone">
+            <i class="fas fa-cloud-upload-alt text-6xl text-gray-300 mb-6"></i>
+            <p class="text-lg font-medium text-gray-700 mb-2">Drag & drop a PDF to fill</p>
+            <p class="text-sm text-gray-500 mb-6">Maximum file size: 50MB</p>
             <input type="file" id="fileInput" accept=".pdf" class="hidden" />
             <button onclick="document.getElementById('fileInput').click()" 
-                    class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Files</button>
+                    class="gradient-bg text-white px-8 py-3 rounded-xl hover-scale font-semibold shadow-lg">Browse PDF File</button>
           </div>
           
-          <div id="formFields" class="hidden space-y-4">
-            <div class="bg-gray-50 p-4 rounded-lg">
-              <h4 class="font-semibold mb-3">Signature</h4>
-              <canvas id="signatureCanvas" class="w-full border rounded-lg signature-canvas" 
-                      style="height: 150px; background: white;"></canvas>
-              <div class="flex gap-2 mt-3">
-                <button onclick="clearSignature()" class="px-4 py-2 border rounded-lg hover:bg-gray-50">
-                  Clear
+          <div id="formFields" class="hidden space-y-8">
+            <div class="bg-gradient-to-br from-gray-50 to-indigo-50 p-6 rounded-2xl border border-gray-100">
+              <h4 class="font-bold text-lg mb-4 text-gray-800 flex items-center gap-3">
+                <i class="fas fa-signature text-indigo-500"></i> Signature
+              </h4>
+              <canvas id="signatureCanvas" class="w-full border-2 border-gray-200 rounded-xl signature-canvas" 
+                      style="height: 200px; background: white;"></canvas>
+              <div class="flex gap-3 mt-6">
+                <button onclick="clearSignature()" class="px-6 py-3 border-2 border-gray-200 rounded-xl hover:bg-gray-50 font-medium flex-1">
+                  Clear Signature
                 </button>
-                <button onclick="saveSignature()" class="gradient-bg text-white px-4 py-2 rounded-lg hover-scale">
+                <button onclick="saveSignature()" class="gradient-bg text-white px-6 py-3 rounded-xl hover-scale font-medium flex-1 shadow-lg">
                   Save Signature
                 </button>
               </div>
             </div>
             
-            <div class="bg-gray-50 p-4 rounded-lg">
-              <h4 class="font-semibold mb-3">Add Text</h4>
-              <input type="text" id="textToAdd" placeholder="Enter text to add" 
-                     class="w-full px-4 py-2 border rounded-lg mb-3">
-              <div class="grid grid-cols-2 gap-3">
-                <input type="number" id="textX" placeholder="X position" class="px-4 py-2 border rounded-lg" value="50">
-                <input type="number" id="textY" placeholder="Y position" class="px-4 py-2 border rounded-lg" value="100">
+            <div class="bg-gradient-to-br from-gray-50 to-indigo-50 p-6 rounded-2xl border border-gray-100">
+              <h4 class="font-bold text-lg mb-4 text-gray-800 flex items-center gap-3">
+                <i class="fas fa-font text-indigo-500"></i> Add Text
+              </h4>
+              <input type="text" id="textToAdd" placeholder="Enter text to add to the PDF" 
+                     class="w-full px-5 py-3 border-2 border-gray-200 rounded-xl mb-4 focus:outline-none focus:border-indigo-500">
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="text-sm font-medium text-gray-700 mb-2 block">X Position</label>
+                  <input type="number" id="textX" placeholder="50" class="w-full px-5 py-3 border-2 border-gray-200 rounded-xl">
+                </div>
+                <div>
+                  <label class="text-sm font-medium text-gray-700 mb-2 block">Y Position</label>
+                  <input type="number" id="textY" placeholder="100" class="w-full px-5 py-3 border-2 border-gray-200 rounded-xl">
+                </div>
               </div>
             </div>
           </div>
           
           <button id="fillBtn" onclick="fillPDF()" 
-                  class="gradient-bg text-white px-6 py-3 rounded-lg hover-scale w-full disabled:opacity-50"
+                  class="gradient-bg text-white px-8 py-4 rounded-xl hover-scale w-full font-semibold text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled>
-            Fill & Save PDF
+            <i class="fas fa-file-signature mr-3"></i> Fill & Save PDF
           </button>
         </div>
       `;
@@ -742,7 +966,7 @@
       canvas.height = canvas.offsetHeight;
       
       ctx.strokeStyle = '#000000';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 3;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
       
@@ -879,26 +1103,26 @@
     // ========== MERGE PDF TOOL ==========
     function getMergeContent() {
       return `
-        <div class="space-y-6">
-          <div class="file-drop-zone p-8 rounded-lg text-center" id="dropZone">
-            <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
-            <p class="text-lg text-gray-600 mb-2">Drag & drop PDF files</p>
-            <p class="text-sm text-gray-500 mb-4">Order matters — use arrows to reorder</p>
+        <div class="space-y-8">
+          <div class="file-drop-zone p-10 rounded-2xl text-center" id="dropZone">
+            <i class="fas fa-cloud-upload-alt text-6xl text-gray-300 mb-6"></i>
+            <p class="text-lg font-medium text-gray-700 mb-2">Drag & drop PDF files to merge</p>
+            <p class="text-sm text-gray-500 mb-6">Order matters — use arrows to reorder</p>
             <input type="file" id="fileInput" multiple accept=".pdf" class="hidden" />
             <button onclick="document.getElementById('fileInput').click()" 
-                    class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Files</button>
+                    class="gradient-bg text-white px-8 py-3 rounded-xl hover-scale font-semibold shadow-lg">Browse PDF Files</button>
           </div>
           
-          <div id="fileList" class="space-y-2"></div>
+          <div id="fileList" class="space-y-4"></div>
           
-          <div class="flex gap-3">
-            <button onclick="clearFiles()" class="px-6 py-2 border rounded-lg hover:bg-gray-50">
+          <div class="flex gap-4">
+            <button onclick="clearFiles()" class="px-8 py-4 border-2 border-gray-200 rounded-xl hover:bg-gray-50 font-medium flex-1">
               Clear All
             </button>
             <button id="mergeBtn" onclick="mergePDFs()" 
-                    class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale flex-1 disabled:opacity-50"
+                    class="gradient-bg text-white px-8 py-4 rounded-xl hover-scale font-semibold flex-1 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled>
-              Merge PDFs
+              <i class="fas fa-layer-group mr-3"></i> Merge PDFs
             </button>
           </div>
         </div>
@@ -908,37 +1132,44 @@
     // ========== SPLIT PDF TOOL ==========
     function getSplitContent() {
       return `
-        <div class="space-y-6">
-          <div class="file-drop-zone p-8 rounded-lg text-center" id="dropZone">
-            <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
-            <p class="text-lg text-gray-600 mb-2">Drag & drop a PDF</p>
+        <div class="space-y-8">
+          <div class="file-drop-zone p-10 rounded-2xl text-center" id="dropZone">
+            <i class="fas fa-cloud-upload-alt text-6xl text-gray-300 mb-6"></i>
+            <p class="text-lg font-medium text-gray-700 mb-2">Drag & drop a PDF to split</p>
+            <p class="text-sm text-gray-500 mb-6">Extract specific pages or split into individual pages</p>
             <input type="file" id="fileInput" accept=".pdf" class="hidden" />
             <button onclick="document.getElementById('fileInput').click()" 
-                    class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Files</button>
+                    class="gradient-bg text-white px-8 py-3 rounded-xl hover-scale font-semibold shadow-lg">Browse PDF File</button>
           </div>
           
-          <div id="splitOptions" class="hidden space-y-4">
-            <div class="bg-gray-50 p-4 rounded-lg">
-              <h4 class="font-semibold mb-3">Split Options</h4>
-              <div class="space-y-3">
-                <label class="flex items-center gap-2">
-                  <input type="radio" name="splitType" value="ranges" checked class="text-purple-600">
-                  <span>Page ranges (e.g., 1-3,5,8-10)</span>
+          <div id="splitOptions" class="hidden space-y-6">
+            <div class="bg-gradient-to-br from-gray-50 to-indigo-50 p-6 rounded-2xl border border-gray-100">
+              <h4 class="font-bold text-lg mb-4 text-gray-800">Split Options</h4>
+              <div class="space-y-4">
+                <label class="flex items-center gap-3 p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:bg-white">
+                  <input type="radio" name="splitType" value="ranges" checked class="text-indigo-600 h-5 w-5">
+                  <div>
+                    <p class="font-semibold text-gray-800">Page ranges</p>
+                    <p class="text-sm text-gray-500 mt-1">e.g., 1-3,5,8-10</p>
+                  </div>
                 </label>
-                <label class="flex items-center gap-2">
-                  <input type="radio" name="splitType" value="single" class="text-purple-600">
-                  <span>Split into single pages</span>
+                <label class="flex items-center gap-3 p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:bg-white">
+                  <input type="radio" name="splitType" value="single" class="text-indigo-600 h-5 w-5">
+                  <div>
+                    <p class="font-semibold text-gray-800">Split into single pages</p>
+                    <p class="text-sm text-gray-500 mt-1">Creates individual PDFs for each page</p>
+                  </div>
                 </label>
-                <input type="text" id="splitInput" placeholder="Enter page ranges" 
-                       class="w-full px-4 py-2 border rounded-lg">
+                <input type="text" id="splitInput" placeholder="Enter page ranges (e.g., 1-3,5,8-10)" 
+                       class="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-indigo-500 mt-4">
               </div>
             </div>
           </div>
           
           <button id="splitBtn" onclick="splitPDF()" 
-                  class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale w-full disabled:opacity-50"
+                  class="gradient-bg text-white px-8 py-4 rounded-xl hover-scale w-full font-semibold text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled>
-            Split PDF
+            <i class="fas fa-cut mr-3"></i> Split PDF
           </button>
         </div>
       `;
@@ -947,39 +1178,49 @@
     // ========== COMPRESS PDF TOOL ==========
     function getCompressContent() {
       return `
-        <div class="space-y-6">
-          <div class="file-drop-zone p-8 rounded-lg text-center" id="dropZone">
-            <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
-            <p class="text-lg text-gray-600 mb-2">Drag & drop a PDF</p>
+        <div class="space-y-8">
+          <div class="file-drop-zone p-10 rounded-2xl text-center" id="dropZone">
+            <i class="fas fa-cloud-upload-alt text-6xl text-gray-300 mb-6"></i>
+            <p class="text-lg font-medium text-gray-700 mb-2">Drag & drop a PDF to compress</p>
+            <p class="text-sm text-gray-500 mb-6">Reduce file size while maintaining quality</p>
             <input type="file" id="fileInput" accept=".pdf" class="hidden" />
             <button onclick="document.getElementById('fileInput').click()" 
-                    class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Files</button>
+                    class="gradient-bg text-white px-8 py-3 rounded-xl hover-scale font-semibold shadow-lg">Browse PDF File</button>
           </div>
           
-          <div id="compressOptions" class="hidden space-y-4">
-            <div class="bg-gray-50 p-4 rounded-lg">
-              <h4 class="font-semibold mb-3">Compression Level</h4>
-              <div class="space-y-2">
-                <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer">
-                  <input type="radio" name="compression" value="low" class="text-purple-600">
-                  <div><p class="font-medium">Low</p><p class="text-sm text-gray-500">Best quality</p></div>
+          <div id="compressOptions" class="hidden space-y-6">
+            <div class="bg-gradient-to-br from-gray-50 to-indigo-50 p-6 rounded-2xl border border-gray-100">
+              <h4 class="font-bold text-lg mb-4 text-gray-800">Compression Level</h4>
+              <div class="space-y-3">
+                <label class="flex items-center gap-4 p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:bg-white">
+                  <input type="radio" name="compression" value="low" class="text-indigo-600 h-5 w-5">
+                  <div>
+                    <p class="font-semibold text-gray-800">Low Compression</p>
+                    <p class="text-sm text-gray-500 mt-1">Best quality, moderate size reduction</p>
+                  </div>
                 </label>
-                <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer">
-                  <input type="radio" name="compression" value="medium" checked class="text-purple-600">
-                  <div><p class="font-medium">Medium</p><p class="text-sm text-gray-500">Balanced</p></div>
+                <label class="flex items-center gap-4 p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:bg-white">
+                  <input type="radio" name="compression" value="medium" checked class="text-indigo-600 h-5 w-5">
+                  <div>
+                    <p class="font-semibold text-gray-800">Medium Compression</p>
+                    <p class="text-sm text-gray-500 mt-1">Balanced quality and size</p>
+                  </div>
                 </label>
-                <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer">
-                  <input type="radio" name="compression" value="high" class="text-purple-600">
-                  <div><p class="font-medium">High</p><p class="text-sm text-gray-500">Smallest file</p></div>
+                <label class="flex items-center gap-4 p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:bg-white">
+                  <input type="radio" name="compression" value="high" class="text-indigo-600 h-5 w-5">
+                  <div>
+                    <p class="font-semibold text-gray-800">High Compression</p>
+                    <p class="text-sm text-gray-500 mt-1">Maximum size reduction</p>
+                  </div>
                 </label>
               </div>
             </div>
           </div>
           
           <button id="compressBtn" onclick="compressPDF()" 
-                  class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale w-full disabled:opacity-50"
+                  class="gradient-bg text-white px-8 py-4 rounded-xl hover-scale w-full font-semibold text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled>
-            Compress PDF
+            <i class="fas fa-compress mr-3"></i> Compress PDF
           </button>
         </div>
       `;
@@ -988,29 +1229,30 @@
     // ========== CONVERT TO PDF TOOL ==========
     function getConvertContent() {
       return `
-        <div class="space-y-6">
-          <div class="file-drop-zone p-8 rounded-lg text-center" id="dropZone">
-            <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
-            <p class="text-lg text-gray-600 mb-2">Drag & drop files to convert</p>
-            <p class="text-sm text-gray-500 mb-4">Images (JPG, PNG) and Text (.txt)</p>
+        <div class="space-y-8">
+          <div class="file-drop-zone p-10 rounded-2xl text-center" id="dropZone">
+            <i class="fas fa-cloud-upload-alt text-6xl text-gray-300 mb-6"></i>
+            <p class="text-lg font-medium text-gray-700 mb-2">Drag & drop files to convert</p>
+            <p class="text-sm text-gray-500 mb-6">Images (JPG, PNG) and Text (.txt) files</p>
             <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.txt" class="hidden" />
             <button onclick="document.getElementById('fileInput').click()" 
-                    class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Files</button>
+                    class="gradient-bg text-white px-8 py-3 rounded-xl hover-scale font-semibold shadow-lg">Browse Files</button>
           </div>
           
-          <div id="convertFileList" class="space-y-2"></div>
+          <div id="convertFileList" class="space-y-4"></div>
           
-          <div class="bg-gray-50 p-4 rounded-lg">
-            <label class="flex items-center gap-2">
-              <input id="mergeConverted" type="checkbox" checked class="text-purple-600">
-              <span>Merge all into a single PDF</span>
+          <div class="bg-gradient-to-br from-gray-50 to-indigo-50 p-6 rounded-2xl border border-gray-100">
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input id="mergeConverted" type="checkbox" checked class="text-indigo-600 h-5 w-5">
+              <span class="font-medium text-gray-800">Merge all into a single PDF</span>
             </label>
+            <p class="text-sm text-gray-500 mt-2">When unchecked, each file will create a separate PDF</p>
           </div>
           
           <button id="convertBtn" onclick="convertToPDF()" 
-                  class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale w-full disabled:opacity-50"
+                  class="gradient-bg text-white px-8 py-4 rounded-xl hover-scale w-full font-semibold text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled>
-            Convert to PDF
+            <i class="fas fa-file-arrow-down mr-3"></i> Convert to PDF
           </button>
         </div>
       `;
@@ -1019,52 +1261,65 @@
     // ========== WATERMARK TOOL ==========
     function getWatermarkContent() {
       return `
-        <div class="space-y-6">
-          <div class="file-drop-zone p-8 rounded-lg text-center" id="dropZone">
-            <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
-            <p class="text-lg text-gray-600 mb-2">Drag & drop a PDF</p>
+        <div class="space-y-8">
+          <div class="file-drop-zone p-10 rounded-2xl text-center" id="dropZone">
+            <i class="fas fa-cloud-upload-alt text-6xl text-gray-300 mb-6"></i>
+            <p class="text-lg font-medium text-gray-700 mb-2">Drag & drop a PDF to watermark</p>
+            <p class="text-sm text-gray-500 mb-6">Add custom text watermarks with full control</p>
             <input type="file" id="fileInput" accept=".pdf" class="hidden" />
             <button onclick="document.getElementById('fileInput').click()" 
-                    class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Files</button>
+                    class="gradient-bg text-white px-8 py-3 rounded-xl hover-scale font-semibold shadow-lg">Browse PDF File</button>
           </div>
           
-          <div id="watermarkOptions" class="hidden space-y-4">
-            <div class="bg-gray-50 p-4 rounded-lg">
-              <h4 class="font-semibold mb-3">Watermark Settings</h4>
-              <input type="text" id="watermarkText" placeholder="Enter watermark text" 
-                     class="w-full px-4 py-2 border rounded-lg mb-3">
+          <div id="watermarkOptions" class="hidden space-y-6">
+            <div class="bg-gradient-to-br from-gray-50 to-indigo-50 p-6 rounded-2xl border border-gray-100">
+              <h4 class="font-bold text-lg mb-4 text-gray-800">Watermark Settings</h4>
+              <input type="text" id="watermarkText" placeholder="Enter watermark text (e.g., CONFIDENTIAL)" 
+                     class="w-full px-5 py-3 border-2 border-gray-200 rounded-xl mb-6 focus:outline-none focus:border-indigo-500">
               
-              <div class="grid grid-cols-2 gap-4 mb-3">
+              <div class="grid grid-cols-2 gap-6 mb-6">
                 <div>
-                  <label class="block text-sm font-medium mb-1">Font Size</label>
-                  <input type="range" id="wmFontSize" min="10" max="100" value="30" class="w-full">
-                  <span id="fontSizeValue" class="text-xs text-gray-500">30px</span>
+                  <label class="block text-sm font-medium text-gray-700 mb-3">Font Size</label>
+                  <input type="range" id="wmFontSize" min="10" max="100" value="30" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                  <div class="flex justify-between mt-2">
+                    <span class="text-xs text-gray-500">10px</span>
+                    <span id="fontSizeValue" class="text-sm font-medium text-indigo-600">30px</span>
+                    <span class="text-xs text-gray-500">100px</span>
+                  </div>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium mb-1">Opacity</label>
-                  <input type="range" id="wmOpacity" min="0" max="100" value="50" class="w-full">
-                  <span id="opacityValue" class="text-xs text-gray-500">50%</span>
+                  <label class="block text-sm font-medium text-gray-700 mb-3">Opacity</label>
+                  <input type="range" id="wmOpacity" min="0" max="100" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                  <div class="flex justify-between mt-2">
+                    <span class="text-xs text-gray-500">0%</span>
+                    <span id="opacityValue" class="text-sm font-medium text-indigo-600">50%</span>
+                    <span class="text-xs text-gray-500">100%</span>
+                  </div>
                 </div>
               </div>
               
-              <label class="block text-sm font-medium mb-1">Position</label>
-              <select id="watermarkPosition" class="w-full px-4 py-2 border rounded-lg mb-3">
-                <option value="center">Center</option>
-                <option value="top-left">Top Left</option>
-                <option value="top-right">Top Right</option>
-                <option value="bottom-left">Bottom Left</option>
-                <option value="bottom-right">Bottom Right</option>
-              </select>
+              <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Position</label>
+                <select id="watermarkPosition" class="w-full px-5 py-3 border-2 border-gray-200 rounded-xl">
+                  <option value="center">Center</option>
+                  <option value="top-left">Top Left</option>
+                  <option value="top-right">Top Right</option>
+                  <option value="bottom-left">Bottom Left</option>
+                  <option value="bottom-right">Bottom Right</option>
+                </select>
+              </div>
               
-              <label class="block text-sm font-medium mb-1">Color</label>
-              <input type="color" id="watermarkColor" value="#000000" class="w-full h-10 rounded cursor-pointer">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Color</label>
+                <input type="color" id="watermarkColor" value="#000000" class="w-full h-12 rounded-lg cursor-pointer border-2 border-gray-200">
+              </div>
             </div>
           </div>
           
           <button id="watermarkBtn" onclick="addWatermark()" 
-                  class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale w-full disabled:opacity-50"
+                  class="gradient-bg text-white px-8 py-4 rounded-xl hover-scale w-full font-semibold text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled>
-            Add Watermark
+            <i class="fas fa-stamp mr-3"></i> Add Watermark
           </button>
         </div>
       `;
@@ -1073,44 +1328,59 @@
     // ========== ROTATE TOOL ==========
     function getRotateContent() {
       return `
-        <div class="space-y-6">
-          <div class="file-drop-zone p-8 rounded-lg text-center" id="dropZone">
-            <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
-            <p class="text-lg text-gray-600 mb-2">Drag & drop a PDF</p>
+        <div class="space-y-8">
+          <div class="file-drop-zone p-10 rounded-2xl text-center" id="dropZone">
+            <i class="fas fa-cloud-upload-alt text-6xl text-gray-300 mb-6"></i>
+            <p class="text-lg font-medium text-gray-700 mb-2">Drag & drop a PDF to rotate</p>
+            <p class="text-sm text-gray-500 mb-6">Rotate all or selected pages in any direction</p>
             <input type="file" id="fileInput" accept=".pdf" class="hidden" />
             <button onclick="document.getElementById('fileInput').click()" 
-                    class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Files</button>
+                    class="gradient-bg text-white px-8 py-3 rounded-xl hover-scale font-semibold shadow-lg">Browse PDF File</button>
           </div>
           
-          <div id="rotateOptions" class="hidden space-y-4">
-            <div class="bg-gray-50 p-4 rounded-lg">
-              <h4 class="font-semibold mb-3">Rotation Options</h4>
-              <div class="grid grid-cols-4 gap-2 mb-4">
-                <button onclick="setRotation(90)" class="px-4 py-2 border rounded-lg hover:bg-gray-100">90°</button>
-                <button onclick="setRotation(180)" class="px-4 py-2 border rounded-lg hover:bg-gray-100">180°</button>
-                <button onclick="setRotation(270)" class="px-4 py-2 border rounded-lg hover:bg-gray-100">270°</button>
-                <button onclick="setRotation(0)" class="px-4 py-2 border rounded-lg hover:bg-gray-100">Reset</button>
+          <div id="rotateOptions" class="hidden space-y-6">
+            <div class="bg-gradient-to-br from-gray-50 to-indigo-50 p-6 rounded-2xl border border-gray-100">
+              <h4 class="font-bold text-lg mb-4 text-gray-800">Rotation Options</h4>
+              <div class="grid grid-cols-4 gap-3 mb-6">
+                <button onclick="setRotation(90)" class="px-4 py-4 border-2 border-gray-200 rounded-xl hover:bg-white font-medium">
+                  90°
+                </button>
+                <button onclick="setRotation(180)" class="px-4 py-4 border-2 border-gray-200 rounded-xl hover:bg-white font-medium">
+                  180°
+                </button>
+                <button onclick="setRotation(270)" class="px-4 py-4 border-2 border-gray-200 rounded-xl hover:bg-white font-medium">
+                  270°
+                </button>
+                <button onclick="setRotation(0)" class="px-4 py-4 border-2 border-gray-200 rounded-xl hover:bg-white font-medium bg-indigo-50">
+                  Reset
+                </button>
               </div>
               
-              <div class="space-y-2">
-                <label class="flex items-center gap-2">
-                  <input type="radio" name="rotateScope" value="all" checked class="text-purple-600">
-                  <span>Rotate all pages</span>
+              <div class="space-y-4">
+                <label class="flex items-center gap-3 p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:bg-white">
+                  <input type="radio" name="rotateScope" value="all" checked class="text-indigo-600 h-5 w-5">
+                  <div>
+                    <p class="font-semibold text-gray-800">Rotate all pages</p>
+                    <p class="text-sm text-gray-500 mt-1">Apply rotation to every page</p>
+                  </div>
                 </label>
-                <label class="flex items-center gap-2">
-                  <input type="radio" name="rotateScope" value="specific" class="text-purple-600">
-                  <span>Rotate specific pages</span>
+                <label class="flex items-center gap-3 p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:bg-white">
+                  <input type="radio" name="rotateScope" value="specific" class="text-indigo-600 h-5 w-5">
+                  <div>
+                    <p class="font-semibold text-gray-800">Rotate specific pages</p>
+                    <p class="text-sm text-gray-500 mt-1">e.g., 1,3,5 or 1-5</p>
+                  </div>
                 </label>
                 <input type="text" id="rotatePages" placeholder="e.g., 1,3,5 or 1-5" 
-                       class="w-full px-4 py-2 border rounded-lg" disabled>
+                       class="w-full px-5 py-3 border-2 border-gray-200 rounded-xl" disabled>
               </div>
             </div>
           </div>
           
           <button id="rotateBtn" onclick="rotatePDF()" 
-                  class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale w-full disabled:opacity-50"
+                  class="gradient-bg text-white px-8 py-4 rounded-xl hover-scale w-full font-semibold text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled>
-            Rotate PDF
+            <i class="fas fa-rotate-right mr-3"></i> Rotate PDF
           </button>
         </div>
       `;
@@ -1119,23 +1389,32 @@
     // ========== EDIT TOOL (simplified) ==========
     function getEditContent() {
       return `
-        <div class="space-y-6">
-          <div class="file-drop-zone p-8 rounded-lg text-center" id="dropZone">
-            <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
-            <p class="text-lg text-gray-600 mb-2">Drag & drop a PDF</p>
+        <div class="space-y-8">
+          <div class="file-drop-zone p-10 rounded-2xl text-center" id="dropZone">
+            <i class="fas fa-cloud-upload-alt text-6xl text-gray-300 mb-6"></i>
+            <p class="text-lg font-medium text-gray-700 mb-2">Drag & drop a PDF to edit</p>
+            <p class="text-sm text-gray-500 mb-6">Add annotations, drawings, and markups</p>
             <input type="file" id="fileInput" accept=".pdf" class="hidden" />
             <button onclick="document.getElementById('fileInput').click()" 
-                    class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">Browse Files</button>
+                    class="gradient-bg text-white px-8 py-3 rounded-xl hover-scale font-semibold shadow-lg">Browse PDF File</button>
           </div>
           
-          <div class="bg-gray-50 p-4 rounded-lg hidden" id="editCanvasContainer">
-            <canvas id="editCanvas" class="w-full border rounded-lg" style="max-height: 500px;"></canvas>
+          <div class="bg-gradient-to-br from-gray-50 to-indigo-50 p-6 rounded-2xl border border-gray-100 hidden" id="editCanvasContainer">
+            <div class="text-center mb-6">
+              <h4 class="font-bold text-lg text-gray-800 mb-2">PDF Editing</h4>
+              <p class="text-gray-600">Full PDF editing functionality coming soon!</p>
+            </div>
+            <div class="bg-white rounded-xl p-8 text-center">
+              <i class="fas fa-tools text-6xl text-indigo-300 mb-4"></i>
+              <p class="text-gray-700 mb-2">Advanced editing features are in development</p>
+              <p class="text-sm text-gray-500">For now, use Fill & Sign or Watermark tools for basic editing</p>
+            </div>
           </div>
           
           <button id="editBtn" onclick="saveEditedPDF()" 
-                  class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale w-full disabled:opacity-50"
+                  class="gradient-bg text-white px-8 py-4 rounded-xl hover-scale w-full font-semibold text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled>
-            Save Edited PDF
+            <i class="fas fa-pencil-alt mr-3"></i> Save Edited PDF
           </button>
         </div>
       `;
@@ -1196,6 +1475,9 @@
         const btn = $(btnId);
         if (btn) {
           btn.disabled = files.length === 0;
+          if (files.length > 0) {
+            btn.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
+          }
         }
       }
       
@@ -1205,17 +1487,13 @@
         compress: '#compressOptions',
         watermark: '#watermarkOptions',
         rotate: '#rotateOptions',
-        edit: '#editCanvasContainer'
+        edit: '#editCanvasContainer',
+        fill: '#formFields'
       };
       
       const optionsId = optionsMap[currentTool];
       if (optionsId && files.length > 0) {
         $(optionsId).classList.remove('hidden');
-      }
-      
-      // Show form fields for fill tool
-      if (currentTool === 'fill' && files.length > 0) {
-        $('#formFields').classList.remove('hidden');
       }
       
       // Display file list for merge and convert
@@ -1235,20 +1513,24 @@
       const mergeBtn = $('#mergeBtn');
       
       fileList.innerHTML = uploadedFiles.map((file, i) => `
-        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-          <div class="flex items-center gap-3">
-            <i class="fas fa-file-pdf text-red-500"></i>
-            <span class="font-medium">${file.name}</span>
-            <span class="text-sm text-gray-500">(${formatFileSize(file.size)})</span>
+        <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-red-50 rounded-lg grid place-items-center">
+              <i class="fas fa-file-pdf text-red-500 text-xl"></i>
+            </div>
+            <div>
+              <p class="font-semibold text-gray-800">${file.name}</p>
+              <p class="text-sm text-gray-500">${formatFileSize(file.size)}</p>
+            </div>
           </div>
           <div class="flex items-center gap-2">
-            <button onclick="moveFile(${i}, -1)" class="text-gray-500 hover:text-gray-700" ${i === 0 ? 'disabled' : ''}>
+            <button onclick="moveFile(${i}, -1)" class="w-10 h-10 border-2 border-gray-200 rounded-lg hover:bg-gray-50 ${i === 0 ? 'opacity-50 cursor-not-allowed' : ''}">
               <i class="fas fa-chevron-up"></i>
             </button>
-            <button onclick="moveFile(${i}, 1)" class="text-gray-500 hover:text-gray-700" ${i === uploadedFiles.length - 1 ? 'disabled' : ''}>
+            <button onclick="moveFile(${i}, 1)" class="w-10 h-10 border-2 border-gray-200 rounded-lg hover:bg-gray-50 ${i === uploadedFiles.length - 1 ? 'opacity-50 cursor-not-allowed' : ''}">
               <i class="fas fa-chevron-down"></i>
             </button>
-            <button onclick="removeMergeFile(${i})" class="text-red-500 hover:text-red-700">
+            <button onclick="removeMergeFile(${i})" class="w-10 h-10 border-2 border-red-200 rounded-lg hover:bg-red-50 text-red-500">
               <i class="fas fa-times"></i>
             </button>
           </div>
@@ -1256,6 +1538,11 @@
       `).join('');
       
       mergeBtn.disabled = uploadedFiles.length < 2;
+      if (uploadedFiles.length < 2) {
+        mergeBtn.classList.add('disabled:opacity-50', 'disabled:cursor-not-allowed');
+      } else {
+        mergeBtn.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
+      }
     }
     
     function displayConvertFiles() {
@@ -1263,19 +1550,28 @@
       const btn = $('#convertBtn');
       
       list.innerHTML = uploadedFiles.map((file, i) => `
-        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-          <div class="flex items-center gap-3">
-            <i class="fas fa-file ${file.type.startsWith('image/') ? 'text-blue-500' : 'text-gray-500'}"></i>
-            <span class="font-medium">${file.name}</span>
-            <span class="text-sm text-gray-500">(${formatFileSize(file.size)})</span>
+        <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 ${file.type.startsWith('image/') ? 'bg-blue-50' : 'bg-gray-50'} rounded-lg grid place-items-center">
+              <i class="fas fa-file ${file.type.startsWith('image/') ? 'text-blue-500' : 'text-gray-500'} text-xl"></i>
+            </div>
+            <div>
+              <p class="font-semibold text-gray-800">${file.name}</p>
+              <p class="text-sm text-gray-500">${formatFileSize(file.size)}</p>
+            </div>
           </div>
-          <button onclick="removeConvertFile(${i})" class="text-red-500 hover:text-red-700">
+          <button onclick="removeConvertFile(${i})" class="w-10 h-10 border-2 border-red-200 rounded-lg hover:bg-red-50 text-red-500">
             <i class="fas fa-times"></i>
           </button>
         </div>
       `).join('');
       
       btn.disabled = uploadedFiles.length === 0;
+      if (uploadedFiles.length === 0) {
+        btn.classList.add('disabled:opacity-50', 'disabled:cursor-not-allowed');
+      } else {
+        btn.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
+      }
     }
     
     function moveFile(i, dir) {
@@ -1300,6 +1596,42 @@
       uploadedFiles = [];
       if (currentTool === 'merge') displayMergeFiles();
       else if (currentTool === 'convert') displayConvertFiles();
+      
+      // Hide options
+      const optionsMap = {
+        split: '#splitOptions',
+        compress: '#compressOptions',
+        watermark: '#watermarkOptions',
+        rotate: '#rotateOptions',
+        edit: '#editCanvasContainer',
+        fill: '#formFields'
+      };
+      
+      const optionsId = optionsMap[currentTool];
+      if (optionsId) {
+        $(optionsId).classList.add('hidden');
+      }
+      
+      // Disable button
+      const toolBtnMap = {
+        fill: '#fillBtn',
+        merge: '#mergeBtn',
+        split: '#splitBtn',
+        compress: '#compressBtn',
+        convert: '#convertBtn',
+        watermark: '#watermarkBtn',
+        rotate: '#rotateBtn',
+        edit: '#editBtn'
+      };
+      
+      const btnId = toolBtnMap[currentTool];
+      if (btnId) {
+        const btn = $(btnId);
+        if (btn) {
+          btn.disabled = true;
+          btn.classList.add('disabled:opacity-50', 'disabled:cursor-not-allowed');
+        }
+      }
     }
     
     // ========== PDF OPERATIONS ==========
@@ -1671,6 +2003,9 @@
       document.addEventListener('change', (e) => {
         if (e.target.name === 'rotateScope') {
           $('#rotatePages').disabled = e.target.value !== 'specific';
+          if (e.target.value === 'specific') {
+            $('#rotatePages').focus();
+          }
         }
       });
       
@@ -1681,6 +2016,10 @@
           $('#textCreate').classList.toggle('hidden', type !== 'text');
           $('#imageCreate').classList.toggle('hidden', type !== 'images');
           $('#blankCreate').classList.toggle('hidden', type !== 'blank');
+          
+          if (type === 'images') {
+            initImageUpload();
+          }
         }
       });
     });
