@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="https://mvelectronix.com/assets/images/logofinal-80x80.png">
+    <link rel="shortcut icon" href="https://mvelectronix.com/assets/images/logofinal-80x80.png">
+    <link rel="apple-touch-icon" href="https://mvelectronix.com/assets/images/logofinal-80x80.png">
+    <title>M.V. Electronix LLC - HTML Course</title>
+    <script type="module" crossorigin src="/assets/index-qhuCUZmY.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Ga1H8u3w.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
