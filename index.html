@@ -9,153 +9,85 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" type="image/x-icon" href="https://mvelectronix.com/assets/images/logofinal-80x80.png">
-  <link rel="shortcut icon" href="https://mvelectronix.com/assets/images/logofinal-80x80.png">
-  <link rel="apple-touch-icon" href="https://mvelectronix.com/assets/images/logofinal-80x80.png">
+  
   <style>
+    :root {
+      /* Neumorphic Palette - Soft Cobalt/Grey */
+      --bg: #e0e5ec;
+      --light-shadow: #ffffff;
+      --dark-shadow: #a3b1c6;
+      --primary: #6d5dfc;
+      --primary-light: #8e82ff;
+      --text: #4a5568;
+      --text-muted: #718096;
+      --accent: #6d5dfc;
+      
+      /* Card Shadows */
+      --nm-out: 9px 9px 16px var(--dark-shadow), -9px -9px 16px var(--light-shadow);
+      --nm-in: inset 6px 6px 10px var(--dark-shadow), inset -6px -6px 10px var(--light-shadow);
+      --nm-out-sm: 4px 4px 8px var(--dark-shadow), -4px -4px 8px var(--light-shadow);
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    :root {
-      --primary: #7c3aed;
-      --primary-dark: #6d28d9;
-      --primary-light: #a78bfa;
-      --secondary: #3b82f6;
-      --accent: #ec4899;
-      --dark-bg: #0f0f1e;
-      --darker-bg: #050510;
-      --card-bg: rgba(20, 20, 40, 0.8);
-      --card-hover: rgba(30, 30, 60, 0.9);
-      --card-border: rgba(124, 58, 237, 0.2);
-      --text: #f8fafc;
-      --text-light: #e2e8f0;
-      --text-muted: #94a3b8;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --glow: rgba(124, 58, 237, 0.4);
-    }
-
-    html, body {
-      height: 100%;
-      background: linear-gradient(135deg, var(--darker-bg) 0%, #1a1a3e 50%, #16213e 100%);
+    body {
+      background-color: var(--bg);
       color: var(--text);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Inter', sans-serif;
       line-height: 1.6;
-      overflow-x: hidden;
+      padding: 2rem 1rem;
     }
 
     .main-container {
-      padding: 2rem 1.5rem;
-      max-width: 1400px;
+      max-width: 1200px;
       margin: 0 auto;
-      min-height: 100vh;
-      position: relative;
     }
 
-    /* Animated background elements */
-    .bg-elements {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      overflow: hidden;
-    }
-
-    .bg-element {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(40px);
-      opacity: 0.15;
-    }
-
-    .bg-element:nth-child(odd) {
-      background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
-    }
-
-    .bg-element:nth-child(even) {
-      background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);
-    }
-
+    /* Header Styling */
     .header {
       text-align: center;
       margin-bottom: 4rem;
-      padding-top: 1rem;
-      position: relative;
     }
 
     h1 {
-      color: var(--text);
-      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
       font-weight: 800;
-      margin-bottom: 1rem;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: -0.02em;
-      position: relative;
-      display: inline-block;
-      text-shadow: 0 0 30px rgba(124, 58, 237, 0.3);
-    }
-
-    .title-icon {
-      margin-right: 0.5rem;
-      font-size: 0.9em;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
+      color: var(--text);
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
     }
 
     .subtitle {
-      font-size: 1.4rem;
-      color: var(--text-light);
-      font-weight: 500;
-      margin-bottom: 1rem;
-      letter-spacing: 0.05em;
+      font-size: 1.2rem;
+      color: var(--primary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
     }
 
-    .description {
-      font-size: 1.1rem;
-      color: var(--text-muted);
-      max-width: 700px;
-      margin: 0 auto 2rem;
-      font-weight: 400;
-      letter-spacing: 0.01em;
-    }
-
-    /* Search box */
+    /* Search Box Neumorphic */
     .search-container {
-      max-width: 600px;
+      max-width: 500px;
       margin: 0 auto 3rem;
       position: relative;
     }
 
     .search-box {
       width: 100%;
-      padding: 1rem 1.5rem 1rem 3rem;
-      border-radius: 50px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1.2rem 1.5rem 1.2rem 3.5rem;
+      border: none;
+      border-radius: 15px;
+      background: var(--bg);
+      box-shadow: var(--nm-in);
       color: var(--text);
       font-size: 1rem;
-      font-family: 'Inter', sans-serif;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-    }
-
-    .search-box:focus {
       outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2), 0 10px 30px rgba(0, 0, 0, 0.2);
-      background: rgba(255, 255, 255, 0.12);
+      transition: all 0.3s ease;
     }
 
     .search-icon {
@@ -164,555 +96,275 @@
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-muted);
-      transition: color 0.3s ease;
     }
 
-    .search-box:focus + .search-icon {
-      color: var(--primary);
-    }
-
-    /* Project categories */
+    /* Categories */
     .categories {
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-bottom: 3rem;
-    }
-
-    .category-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 0.6rem 1.5rem;
-      border-radius: 50px;
-      font-weight: 500;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-      color: var(--text-light);
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      backdrop-filter: blur(5px);
-    }
-
-    .category-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 0;
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      transition: width 0.3s ease;
-      z-index: -1;
-    }
-
-    .category-btn:hover, .category-btn.active {
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(124, 58, 237, 0.3);
-    }
-
-    .category-btn:hover::before, .category-btn.active::before {
-      width: 100%;
-    }
-
-    .category-btn.active {
-      border-color: transparent;
-    }
-
-    /* Projects grid */
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 2rem;
+      gap: 1.2rem;
       margin-bottom: 4rem;
     }
 
+    .category-btn {
+      border: none;
+      padding: 0.8rem 1.8rem;
+      border-radius: 12px;
+      background: var(--bg);
+      box-shadow: var(--nm-out-sm);
+      color: var(--text-muted);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .category-btn:active, .category-btn.active {
+      box-shadow: var(--nm-in);
+      color: var(--primary);
+    }
+
+    /* Project Cards */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2.5rem;
+    }
+
     .project-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 1.8rem;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
-      overflow: hidden;
-      backdrop-filter: blur(10px);
+      background: var(--bg);
+      box-shadow: var(--nm-out);
+      border-radius: 30px;
+      padding: 2rem;
       display: flex;
       flex-direction: column;
-      height: 100%;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    }
-
-    .project-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: -1;
-    }
-
-    .project-card::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 100%;
-      background: linear-gradient(to bottom, var(--primary), var(--secondary));
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: transform 0.3s ease;
     }
 
     .project-card:hover {
-      transform: translateY(-10px);
-      background: var(--card-hover);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(124, 58, 237, 0.2);
-    }
-
-    .project-card:hover::before {
-      opacity: 1;
-    }
-
-    .project-card:hover::after {
-      opacity: 1;
+      transform: translateY(-5px);
     }
 
     .card-header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1.2rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
     }
 
     .project-icon {
-      font-size: 2.2rem;
-      margin-bottom: 0.5rem;
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
+      background: var(--bg);
+      box-shadow: var(--nm-out-sm);
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);
-      transition: all 0.3s ease;
-    }
-
-    .project-card:hover .project-icon {
-      transform: scale(1.1);
-      box-shadow: 0 5px 15px rgba(124, 58, 237, 0.3);
+      font-size: 1.5rem;
     }
 
     .project-badge {
-      background: rgba(124, 58, 237, 0.2);
-      color: var(--primary-light);
-      font-size: 0.75rem;
-      padding: 0.3rem 0.8rem;
-      border-radius: 50px;
-      font-weight: 600;
       font-family: 'JetBrains Mono', monospace;
-      border: 1px solid rgba(124, 58, 237, 0.3);
-      transition: all 0.3s ease;
-    }
-
-    .project-card:hover .project-badge {
-      background: rgba(124, 58, 237, 0.3);
-      border-color: var(--primary-light);
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--primary);
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      box-shadow: var(--nm-in);
     }
 
     .project-title {
-      font-weight: 700;
       font-size: 1.4rem;
+      font-weight: 700;
       margin-bottom: 0.8rem;
       color: var(--text);
-      transition: color 0.3s ease;
-    }
-
-    .project-card:hover .project-title {
-      color: var(--primary-light);
     }
 
     .project-description {
       font-size: 0.95rem;
-      color: var(--text-light);
-      margin-bottom: 1.8rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
       flex-grow: 1;
-      line-height: 1.6;
     }
 
+    /* Neumorphic Button */
     .project-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      color: white;
       text-decoration: none;
-      padding: 0.8rem 1.5rem;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-      border: none;
-      cursor: pointer;
-      width: 100%;
+      display: block;
       text-align: center;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 5px 15px rgba(124, 58, 237, 0.3);
-    }
-
-    .project-link::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left 0.5s ease;
-    }
-
-    .project-link:hover::before {
-      left: 100%;
+      padding: 1rem;
+      border-radius: 15px;
+      background: var(--bg);
+      box-shadow: var(--nm-out-sm);
+      color: var(--primary);
+      font-weight: 700;
+      transition: all 0.2s ease;
     }
 
     .project-link:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.4);
-      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+      box-shadow: 6px 6px 10px var(--dark-shadow), -6px -6px 10px var(--light-shadow);
+      color: var(--primary-light);
     }
 
-    .project-link i {
-      margin-left: 0.5rem;
-      transition: transform 0.3s ease;
+    .project-link:active {
+      box-shadow: var(--nm-in);
     }
 
-    .project-link:hover i {
-      transform: translateX(5px);
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 4rem 2rem;
-      color: var(--text-muted);
-      display: none;
-    }
-
-    .empty-state i {
-      font-size: 3rem;
-      margin-bottom: 1.5rem;
-      color: var(--text-light);
-      opacity: 0.5;
-    }
-
+    /* Footer */
     footer {
+      margin-top: 6rem;
       text-align: center;
-      font-size: 0.95rem;
-      padding: 2.5rem 0 2rem;
-      margin-top: 3rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 2rem;
+      border-radius: 30px;
+      box-shadow: var(--nm-in);
       color: var(--text-muted);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .footer-logo {
-      font-weight: 700;
-      color: var(--text-light);
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .footer-logo i {
-      color: var(--primary);
-      animation: pulse 2s infinite;
     }
 
     .footer-links {
+      margin: 1.5rem 0;
       display: flex;
+      justify-content: center;
       gap: 2rem;
-      margin-top: 0.5rem;
     }
 
     .footer-links a {
-      color: var(--text-muted);
+      color: var(--text);
       text-decoration: none;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      font-weight: 500;
     }
 
-    .footer-links a:hover {
-      color: var(--primary);
-      transform: translateY(-2px);
+    .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem;
+        box-shadow: var(--nm-in);
+        border-radius: 20px;
+        display: none;
     }
 
-    @media (max-width: 768px) {
-      .main-container {
-        padding: 1.5rem 1rem;
-      }
-      
-      .projects-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-      
-      .project-card {
-        padding: 1.5rem;
-      }
-      
-      .categories {
-        margin-bottom: 2rem;
-      }
-      
-      .footer-links {
-        flex-direction: column;
-        gap: 1rem;
-      }
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      .projects-grid { gap: 1.5rem; }
     }
-
-    /* Smooth scrolling */
-    html {
-      scroll-behavior: smooth;
-    }
-
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(to bottom, var(--primary), var(--secondary));
-      border-radius: 5px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: linear-gradient(to bottom, var(--primary-light), var(--secondary));
-    }
-
-    /* Animation for cards */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .project-card {
-      animation: fadeInUp 0.5s ease forwards;
-      opacity: 0;
-    }
-
-    .project-card:nth-child(1) { animation-delay: 0.1s; }
-    .project-card:nth-child(2) { animation-delay: 0.2s; }
-    .project-card:nth-child(3) { animation-delay: 0.3s; }
-    .project-card:nth-child(4) { animation-delay: 0.4s; }
-    .project-card:nth-child(5) { animation-delay: 0.5s; }
-    .project-card:nth-child(6) { animation-delay: 0.6s; }
-    .project-card:nth-child(7) { animation-delay: 0.7s; }
-    .project-card:nth-child(8) { animation-delay: 0.8s; }
   </style>
 </head>
 <body>
-  <div class="bg-elements" id="bgElements"></div>
-  
+
   <div class="main-container">
     <div class="header">
-      <h1><span class="title-icon">🧪</span> Sandbox Projects</h1>
-      <p class="subtitle">Interactive Tools & Experiments</p>
-      <p class="description">A curated collection of web-based tools, experiments, and development projects by M.V. Electronix LLC.</p>
+      <p class="subtitle">M.V. Electronix Lab</p>
+      <h1>Sandbox Projects</h1>
     </div>
 
     <div class="search-container">
-      <input type="text" class="search-box" id="searchBox" placeholder="Search projects...">
+      <input type="text" class="search-box" id="searchBox" placeholder="Search experiments...">
       <i class="fas fa-search search-icon"></i>
     </div>
 
     <div class="categories">
-      <button class="category-btn active" data-category="all">All Projects</button>
+      <button class="category-btn active" data-category="all">All</button>
       <button class="category-btn" data-category="productivity">Productivity</button>
       <button class="category-btn" data-category="gaming">Gaming</button>
       <button class="category-btn" data-category="education">Education</button>
-      <button class="category-btn" data-category="tools">Development Tools</button>
+      <button class="category-btn" data-category="tools">Dev Tools</button>
     </div>
 
     <div class="projects-grid" id="projectsGrid">
-      <!-- Projects will be dynamically filtered -->
       <div class="project-card" data-categories="productivity">
         <div class="card-header">
           <div class="project-icon">💓</div>
-          <span class="project-badge">PRODUCTIVITY</span>
+          <span class="project-badge">LIFE</span>
         </div>
-        <h3 class="project-title">Stayin' Alive Tracker</h3>
-        <p class="project-description">Track daily habits, activities, and wellness goals with detailed analytics and progress visualization.</p>
-        <a class="project-link" href="stayinalive/">Open Tool <i class="fas fa-arrow-right"></i></a>
+        <h3 class="project-title">Stayin' Alive</h3>
+        <p class="project-description">Track daily habits, activities, and wellness goals with detailed analytics.</p>
+        <a class="project-link" href="stayinalive/">Open Experiment</a>
       </div>
 
       <div class="project-card" data-categories="gaming">
         <div class="card-header">
           <div class="project-icon">🎮</div>
-          <span class="project-badge">GAMING</span>
+          <span class="project-badge">INPUT</span>
         </div>
         <h3 class="project-title">Gamepad Tester</h3>
-        <p class="project-description">Test, calibrate, and visualize input from game controllers with real-time feedback and diagnostics.</p>
-        <a class="project-link" href="gamepadtester/">Open Tool <i class="fas fa-arrow-right"></i></a>
+        <p class="project-description">Test, calibrate, and visualize input from game controllers with real-time feedback.</p>
+        <a class="project-link" href="gamepadtester/">Open Experiment</a>
       </div>
 
       <div class="project-card" data-categories="productivity">
         <div class="card-header">
           <div class="project-icon">📚</div>
-          <span class="project-badge">PRODUCTIVITY</span>
+          <span class="project-badge">TASKS</span>
         </div>
         <h3 class="project-title">MV Checklist</h3>
-        <p class="project-description">Interactive checklist manager with priorities, due dates, and completion tracking.</p>
-        <a class="project-link" href="mvchecklist/">Open Tool <i class="fas fa-arrow-right"></i></a>
-      </div>
-
-      <div class="project-card" data-categories="gaming">
-        <div class="card-header">
-          <div class="project-icon">🎯</div>
-          <span class="project-badge">GAMING</span>
-        </div>
-        <h3 class="project-title">DualShock Calibrator</h3>
-        <p class="project-description">Advanced calibration tool for PlayStation controllers with sensitivity adjustments.</p>
-        <a class="project-link" href="dualshock/">Open Tool <i class="fas fa-arrow-right"></i></a>
+        <p class="project-description">Interactive checklist manager with priorities and completion tracking.</p>
+        <a class="project-link" href="mvchecklist/">Open Experiment</a>
       </div>
 
       <div class="project-card" data-categories="tools">
         <div class="card-header">
           <div class="project-icon">📄</div>
-          <span class="project-badge">DEVELOPMENT</span>
-        </div>
-        <h3 class="project-title">MV PDF Scanner</h3>
-        <p class="project-description">Extract and analyze content from PDF documents with batch processing support.</p>
-        <a class="project-link" href="mvscanpro/">Open Tool <i class="fas fa-arrow-right"></i></a>
-      </div>
-
-      <div class="project-card" data-categories="tools">
-        <div class="card-header">
-          <div class="project-icon">🛠️</div>
-          <span class="project-badge">DEVELOPMENT</span>
+          <span class="project-badge">PDF</span>
         </div>
         <h3 class="project-title">MV PDF Studio</h3>
-        <p class="project-description">Comprehensive PDF manipulation tools including merge, split, and conversion utilities.</p>
-        <a class="project-link" href="mvpdf/">Open Tool <i class="fas fa-arrow-right"></i></a>
+        <p class="project-description">Comprehensive PDF manipulation tools including merge and conversion utilities.</p>
+        <a class="project-link" href="mvpdf/">Open Experiment</a>
       </div>
 
       <div class="project-card" data-categories="education">
         <div class="card-header">
           <div class="project-icon">➗</div>
-          <span class="project-badge">EDUCATION</span>
+          <span class="project-badge">MATH</span>
         </div>
-        <h3 class="project-title">2nd Gr Number Line</h3>
-        <p class="project-description">Interactive number line tool for elementary math education with visualization aids.</p>
-        <a class="project-link" href="2ndgrnumberline/">Open Tool <i class="fas fa-arrow-right"></i></a>
+        <h3 class="project-title">Number Line</h3>
+        <p class="project-description">Interactive number line tool for elementary math education visualization.</p>
+        <a class="project-link" href="2ndgrnumberline/">Open Experiment</a>
       </div>
 
       <div class="project-card" data-categories="gaming">
         <div class="card-header">
           <div class="project-icon">👾</div>
-          <span class="project-badge">GAMING</span>
+          <span class="project-badge">ARCADE</span>
         </div>
-        <h3 class="project-title">M.V. Electronix Games</h3>
-        <p class="project-description">Collection of interactive games and experiments developed by M.V. Electronix.</p>
-        <a class="project-link" href="mvelectronixgames/">Open Tool <i class="fas fa-arrow-right"></i></a>
+        <h3 class="project-title">MV Games</h3>
+        <p class="project-description">Collection of interactive games developed by M.V. Electronix.</p>
+        <a class="project-link" href="mvelectronixgames/">Open Experiment</a>
       </div>
-    </div>
 
-    <div class="empty-state" id="emptyState">
-      <i class="fas fa-search"></i>
-      <h3>No projects found</h3>
-      <p>Try adjusting your search or filter to find what you're looking for.</p>
+      <div class="empty-state" id="emptyState">
+        <h3>No matches found</h3>
+        <p>Try searching for something else.</p>
+      </div>
     </div>
 
     <footer>
-      <div class="footer-logo">
-        <i class="fas fa-bolt"></i>
-        M.V. Electronix LLC
-      </div>
-      <p>Innovative tools and experiments for developers and creators.</p>
+      <p><strong>M.V. Electronix LLC</strong></p>
       <div class="footer-links">
-        <a href="#"><i class="fas fa-envelope"></i> Contact</a>
-        <a href="#"><i class="fas fa-code"></i> GitHub</a>
-        <a href="#"><i class="fas fa-info-circle"></i> About</a>
+        <a href="#">Contact</a>
+        <a href="#">GitHub</a>
+        <a href="#">About</a>
       </div>
-      <p>© 2026 All rights reserved. Version 2.0</p>
+      <p>© 2026 Sandbox Environment v2.1</p>
     </footer>
   </div>
 
   <script>
-    // Create animated background elements
-    const bgElements = document.getElementById('bgElements');
-    for (let i = 0; i < 15; i++) {
-      const element = document.createElement('div');
-      element.className = 'bg-element';
-      const size = Math.random() * 300 + 50;
-      const x = Math.random() * 100;
-      const y = Math.random() * 100;
-      const opacity = Math.random() * 0.1 + 0.05;
-      
-      element.style.width = `${size}px`;
-      element.style.height = `${size}px`;
-      element.style.left = `${x}%`;
-      element.style.top = `${y}%`;
-      element.style.opacity = opacity;
-      element.style.animation = `float ${Math.random() * 20 + 20}s infinite ease-in-out`;
-      element.style.animationDelay = `${Math.random() * 5}s`;
-      
-      bgElements.appendChild(element);
-    }
-
-    // Add floating animation
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes float {
-        0%, 100% { transform: translate(0, 0) rotate(0deg); }
-        25% { transform: translate(10px, 10px) rotate(1deg); }
-        50% { transform: translate(-5px, 15px) rotate(-1deg); }
-        75% { transform: translate(-10px, 5px) rotate(1deg); }
-      }
-    `;
-    document.head.appendChild(style);
-
-    // Category filtering functionality
     const categoryButtons = document.querySelectorAll('.category-btn');
     const projectCards = document.querySelectorAll('.project-card');
     const searchBox = document.getElementById('searchBox');
     const emptyState = document.getElementById('emptyState');
     
-    let activeCategory = 'all';
-    let searchTerm = '';
-    
     function filterProjects() {
+      const activeCategory = document.querySelector('.category-btn.active').dataset.category;
+      const searchTerm = searchBox.value.toLowerCase().trim();
       let visibleCount = 0;
       
       projectCards.forEach(card => {
         const categories = card.getAttribute('data-categories');
         const title = card.querySelector('.project-title').textContent.toLowerCase();
-        const description = card.querySelector('.project-description').textContent.toLowerCase();
         
         const matchesCategory = activeCategory === 'all' || categories.includes(activeCategory);
-        const matchesSearch = !searchTerm || 
-          title.includes(searchTerm) || 
-          description.includes(searchTerm);
+        const matchesSearch = title.includes(searchTerm);
         
         if (matchesCategory && matchesSearch) {
           card.style.display = 'flex';
@@ -722,63 +374,18 @@
         }
       });
       
-      // Show empty state if no projects match
-      if (visibleCount === 0) {
-        emptyState.style.display = 'block';
-      } else {
-        emptyState.style.display = 'none';
-      }
+      emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
     }
     
-    // Set up category buttons
     categoryButtons.forEach(button => {
       button.addEventListener('click', () => {
         categoryButtons.forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
-        activeCategory = button.getAttribute('data-category');
         filterProjects();
       });
     });
     
-    // Set up search functionality
-    searchBox.addEventListener('input', () => {
-      searchTerm = searchBox.value.toLowerCase().trim();
-      filterProjects();
-    });
-    
-    // Initialize with all projects visible
-    filterProjects();
-
-    // Add keyboard shortcut for search (Ctrl/Cmd + K)
-    document.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        searchBox.focus();
-      }
-      
-      // Escape key clears search
-      if (e.key === 'Escape' && document.activeElement === searchBox) {
-        searchBox.value = '';
-        searchTerm = '';
-        filterProjects();
-      }
-    });
-
-    // Add hover effect to project cards
-    projectCards.forEach(card => {
-      card.addEventListener('mouseenter', () => {
-        card.style.transform = 'translateY(-10px)';
-      });
-      
-      card.addEventListener('mouseleave', () => {
-        // Only reset if not filtered out
-        if (card.style.display !== 'none') {
-          card.style.transform = 'translateY(0)';
-        }
-      });
-    });
+    searchBox.addEventListener('input', filterProjects);
   </script>
 </body>
 </html>
-
-
